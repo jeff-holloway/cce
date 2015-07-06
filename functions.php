@@ -3102,6 +3102,8 @@
 		$store=0;
 		$edit_only="";
 		
+		$img_only=0;
+		
 		$sql = "
      		select * 
      		from cce_messages			
@@ -3125,17 +3127,22 @@
      			";
      		}
      		
-     		if(trim($row['subject'])!="")		$cce++;
+     		if(trim($row['message'])!="")		$cce++;
+     		
+     		if(substr_count($row['message'],"<img") > 0 || substr_count($row['message'],"<IMG") > 0)		$img_only=1;
+     		
      		
      		//display normal message...
      		$mtab1.="
-     			<div class='cce_message_display'>
+     			<div class='cce_message_display".($img_only > 0 ? "_img_only" : "")."'>
      				<div class='cce_message_display_hdr'><span id='cce_sub_".$row['id']."'>".$row['subject']."</span></div>
-     				<div class='cce_message_display_txt'><span id='cce_msg_".$row['id']."'>".$row['message']."</span>".$editor."</div>
+     				<div class='cce_message_display_txt".($img_only > 0 ? "_img_only" : "")."'><span id='cce_msg_".$row['id']."'>".$row['message']."</span>".$editor."</div>
      			</div>
      			".$res_tab."
      		";	
      	}      	
+     	
+     	$img_only=0;
      	
      	$sql = "
      		select * 
@@ -3162,20 +3169,24 @@
      			";
      			$edit_only.=$editor.$res_tab;
      		}
+     			
+     		if(trim($row['message'])!="")		$merch++;
      		
-     		if(trim($row['subject'])!="")		$merch++;
+     		if(substr_count($row['message'],"<img") > 0 || substr_count($row['message'],"<IMG") > 0)		$img_only=1;
      		
      		//display normal message...
      		if(trim($row['subject'])!="" || trim($row['message'])!="")
      		{
      			$mtab.="
-     				<div class='cce_message_display'>
+     				<div class='cce_message_display'".($img_only > 0 ? "_img_only" : "").">
      					<div class='cce_message_display_hdr'><span id='cce_sub_".$row['id']."'>".$row['subject']."</span></div>
-     					<div class='cce_message_display_txt'><span id='cce_msg_".$row['id']."'>".$row['message']."</span></div>
+     					<div class='cce_message_display_txt".($img_only > 0 ? "_img_only" : "")."'><span id='cce_msg_".$row['id']."'>".$row['message']."</span></div>
      				</div>
      			";
      		}	
      	} 
+     	
+     	$img_only=0;
      	
      	$sql = "
      		select * 
@@ -3203,15 +3214,17 @@
      			$edit_only.=$editor.$res_tab;
      		}
      		
-     		if(trim($row['subject'])!="")	{	$store++;		}
+     		if(trim($row['message'])!="")		$store++;	
+     		
+     		if(substr_count($row['message'],"<img") > 0 || substr_count($row['message'],"<IMG") > 0)		$img_only=1;
      		
      		//display normal message...
      		if(trim($row['subject'])!="" || trim($row['message'])!="")
      		{
      			$mtab.="
-     				<div class='cce_message_display'>
+     				<div class='cce_message_display".($img_only > 0 ? "_img_only" : "")."'>
      					<div class='cce_message_display_hdr'><span id='cce_sub_".$row['id']."'>".$row['subject']."</span></div>
-     					<div class='cce_message_display_txt'><span id='cce_msg_".$row['id']."'>".$row['message']."</span></div>
+     					<div class='cce_message_display_txt".($img_only > 0 ? "_img_only" : "")."'><span id='cce_msg_".$row['id']."'>".$row['message']."</span></div>
      				</div>
      			";
      		}	

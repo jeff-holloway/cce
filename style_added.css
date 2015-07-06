@@ -212,6 +212,8 @@ div#users-contain table td, div#users-contain table th { border: 1px solid #eee;
 .cce_message_display_txt {
 	font-weight:normal; font-size:12px; 
 	margin-left:5px;
+	background-color:#FFFFFF;
+	color:#000000;
 }
 
 .mrr_v_spacer { padding:3px;font-size:12px}
