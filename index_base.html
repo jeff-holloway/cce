@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Capital Compliance</title>
+
+    <!-- Bootstrap -->
+    <link href="common/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="common/css/bootstrap-theme.min.css" rel="stylesheet"> -->
+    <link href="common/css/fonts.css" rel="stylesheet">
+    <link href="common/css/font-awesome.css" rel="stylesheet">
+    <link href="common/css/style.css" rel="stylesheet">
+    <link href="common/css/responsive.css" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<!-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> -->
+	<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<!-- <script src="common/js/jquery-latest.min.js"></script>  -->
+	<script src="common/js/jquery.tablesorter.js"></script> 
+	<script src="common/js/jquery.tablesorter.pager.js"></script> 
+	<script src="common/js/placeholders.min.js"></script> 
+	
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	<!--[if lt IE 9]>
+	<link rel="stylesheet" type="text/css" href="common/css/ie8.css" />
+<![endif]-->
+<!--[if !IE]><!--><script>
+if (/*@cc_on!@*/false) {
+    document.documentElement.className+=' ie10';
+}
+</script><!--<![endif]-->
+<!--[if lt IE 11]>
+	<link rel="stylesheet" type="text/css" href="common/css/ie10.css" />
+<![endif]-->
+<style>
+    @media all and (-ms-high-contrast:none)
+     {
+     *::-ms-backdrop, .chbox input[type="checkbox"]{display:inline!important;}
+	 *::-ms-backdrop, .chbox td label {background: transparent!important;padding-left: 5px!important;} /* IE11 */
+	 *::-ms-backdrop, tr.chbox td label{line-height:10px!important;padding-bottom:3px!important;} /* IE11 */
+     }
+  </style>
+  </head>
+  <body>
+    <div class="container">
+			<div class="top_header">
+				<div class="col-lg-3 col-md-3 col-sm-4 col-xs-9">
+					<div class="logo">
+						<a href="#"><img src="common/images/logo.png" alt=""></a>
+					</div>
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-8 col-xs-3 top_menu">
+				
+					<nav class="navbar navbar-default" role="navigation">
+					   <div class="navbar-header">
+						  <button type="button" class="navbar-toggle" data-toggle="collapse" 
+							 data-target="#example-navbar-collapse">
+							 <span class="sr-only">Toggle navigation</span>
+							 <span class="icon-bar"></span>
+							 <span class="icon-bar"></span>
+							 <span class="icon-bar"></span>
+						  </button>
+					   </div>
+					   <div class="collapse navbar-collapse" id="main_desktop_menu">
+						  <ul class="nav navbar-nav">
+							 <li class="active"><a href="#">Customer Menu</a></li>
+							 <li><a href="#">Services</a></li>
+							 <li><a href="#">Industries</a></li>
+							 <li><a href="#">Products</a></li>
+							 <li><a href="#">Free Tools</a></li>
+							 <li><a href="#">FAQ</a></li>
+							 <li><a href="#">Contact Us</a></li>
+							 <li class="sign_in">
+									<button type="button" class="btn btn-default navbar-btn">Sign Out</button>
+							</li>
+						  </ul>
+					   </div>
+					</nav>
+				</div>				
+			</div>
+			<div class="mob_menu">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<div class="collapse navbar-collapse" id="example-navbar-collapse">
+							  <ul class="nav navbar-nav">
+								 <li class="active"><a href="#">Customer Menu</a></li>
+								 <li><a href="#">Services</a></li>
+								 <li><a href="#">Industries</a></li>
+								 <li><a href="#">Products</a></li>
+								 <li><a href="#">Free Tools</a></li>
+								 <li><a href="#">FAQ</a></li>
+								 <li><a href="#">Contact Us</a></li>
+								 <li class="sign_in">
+										<button type="button" class="btn btn-default navbar-btn">Sign Out</button>
+								</li>
+							  </ul>
+						   </div>
+				</div>
+			</div>
+			<div class="banner_top">
+				<img src="common/images/main_banner_img.png" alt="">	
+				<div class="banner_txt">
+					<h3>Souza Liquor AML</h3>
+					<p>Compliance Management Portal</p>
+				</div>
+			</div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="welcome_heading">
+					<h2>Welcome, <span>Bill Souza</span>, Director of Operations!</h2>
+				</div>
+			</div>
+			<div class="mainbody_content">
+			<div class="row-offcanvas wrapper">
+			 <div class="navbar navbar-static-top navbar-default">
+				  <div class="container">
+					<div class="navbar-header">
+					  <button id="toggle" type="button" class="navbar-toggle">
+						<i class="fa fa-align-justify"></i>
+					  </button>
+					  <a href="" class="navbar-brand">Side Menu</a>
+					</div>
+				  </div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 sidebar-offcanvas">
+					<button type="button" class="btn btn-default navbar-btn upload_btn">Upload Documents</button>
+					<ul class="side_menu" data-role="panelbar">
+						<li><a class="active_side_menu" href="#"><i class="fa fa-arrow-circle-right"></i> Customer Profile</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Compliance Officer</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Compliance Manager</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Financial Institution</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> IRS</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> AML Compliance Programs</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> 3rd Party Independent Reviews</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Plan to Address Deficiencies</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Training Center</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Monitoring Logs</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Fraud Alerts</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Transaction Monitoring</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Licenses, Registrations, Permits</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Legal/Contracts</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> AML Consultant Notes</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> CTR/SARs</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Other Documents</a></li>
+						<li><a href="#"><i class="fa fa-arrow-circle-right"></i> Auditor Folder</a></li>
+					</ul>
+					<div class="photo_edit">
+						<img src="common/images/side_bar_img_edit.png" alt="">
+						<a class="photo_sidebar_edit" href="#"><i class="fa fa-pencil"></i></a>
+					</div>
+				</div>
+				<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+					<div class="middle_main_content">
+					<div class="column move_box_left">
+							<div class="portlet left_col sort_tbl">
+								<div class="Table_sort_main">
+								<div class="search_box">
+									<div class="input-group">
+										<input type="text" class="form-control" placeholder="Search...">
+										<span class="input-group-btn">
+										<button class="btn btn-default" type="button"><i class="fa fa-search"></i></button>
+										</span>
+									</div>
+									<a href="#">advanced search <i class="fa fa-angle-double-right"></i></a>
+								</div>
+								<div class="clearfix"></div>
+								<table id="myTable" class="tablesorter"> 
+									<thead> 
+										<tr> 
+											<th>CID #</th> 
+											<th>Legal Name</th> 
+											<th>UID #</th> 
+											<th>DBA NAME</th> 
+											<th>ADDRESS</th> 
+											<th>CITY</th> 
+											<th>STATE</th> 
+										</tr> 
+									</thead> 
+									<tbody> 
+									<tr class="fir_odd"> 
+										<td>1234567</td> 
+										<td>Search Result</td> 
+										<td>12345678</td> 
+										<td>Bob’s Burgers</td> 
+										<td>123 Main..</td> 
+										<td>Oakland</td> 
+										<td>CA</td> 
+									</tr> 
+									<tr> 
+										<td>8796542</td> 
+										<td>Search Result</td> 
+										<td>23456789</td> 
+										<td>Bob’s Burgers</td> 
+										<td>123 Main..</td> 
+										<td>Oakland</td> 
+										<td>CA</td> 
+									</tr> 
+									<tr> 
+										<td>4678963</td> 
+										<td>Search Result</td> 
+										<td>34567890</td> 
+										<td>Bob’s Burgers</td> 
+										<td>123 Main..</td> 
+										<td>Oakland</td> 
+										<td>CA</td> 
+									</tr> 
+									<tr> 
+										<td>9432459</td> 
+										<td>Search Result</td> 
+										<td>45678901</td> 
+										<td>Bob’s Burgers</td> 
+										<td>123 Main..</td> 
+										<td>Oakland</td> 
+										<td>CA</td> 
+									</tr> 
+									</tbody> 
+								</table> 
+								
+								<div id="pager" class="pager" style="">
+								<form>
+									<img src="common/images/first.png" class="first" alt="">
+									<img src="common/images/prev.png" class="prev" alt="">
+									<input type="text" class="pagedisplay">
+									<img src="common/images/next.png" class="next" alt="">
+									<img src="common/images/last.png" class="last" alt="">
+									<select class="pagesize">
+										<option selected="selected" value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+									</select>
+								</form>
+							</div>		
+								
+								
+							</div>
+							</div>
+							<div class="portlet left_col cust_info">
+								<div class="portlet-header">CUSTOMER INFORMATION</div>
+								<div class="portlet-content">
+										<table class="table table-striped">
+											  <tbody>
+												<tr>
+												  <td>TEMPLATE<br><span>MBS Template</span></td>
+												  <td>COMPLIANCE PROGRAM TITLE<br><span>AML Compliance Management Portal</span></td>
+												</tr>
+												<tr>
+												  <td>CID #<br><span>12345678</span></td>
+												  <td>CID MARKETING MESSAGE<br><span>It’s time for annual training. Please click on the Training Link.</span></td>
+												</tr>
+												<tr>
+												  <td>TEMPLATE<br><span>MBS Template</span></td>
+												  <td>COMPLIANCE PROGRAM TITLE<br><span>AML Compliance Management Portal</span></td>
+												</tr>
+												<tr>
+												  <td colspan="2">LEGAL NAME<br><span>Chavez Markets</span></td>
+												</tr>
+												<tr class="corp_add">
+												  <td>CORPORATE ADDRESS<br><span>123 First Street</span></td>
+												  <td>CORPORATE PHONE<br><span>(123) 456-7890</span></td>
+												</tr>
+												<tr class="corp_add">
+												  <td>CORPORATE CITY<br><span>Oakland</span></td>
+												  <td>CORPORATE FAX<br><span>(123) 456-7890</span></td>
+												</tr>
+												<tr class="corp_add">
+												  <td>
+													
+													<table class="table table-striped internal_table">
+														<tbody>
+															<tr><td>CORPORATE STATE<br><span>CA</span></td></tr>
+															<tr><td>CORPORATE ZIP<br><span>12345</span></td></tr>
+														</tbody>
+													</table>
+													</td>
+												  <td class="pos_rel">CORPORATE LOGO<br><img src="common/images/corporate_logo.png" alt=""><small><a href="#"><i class="fa fa-pencil"></i></a></small></td>	  
+												</tr>
+												<tr>
+													<td>
+														<table class="table table-striped internal_table">
+															<tbody>
+																<tr><td>COMPLIANCE OFFICER<br><span>Kyle Oden</span></td></tr>
+																<tr><td>CO EMAIL ADDRESS<br><span>kyle@chavezsuper.com</span></td></tr>
+																<tr><td>CO PASSWORD<br><span>************</span></td></tr>
+															</tbody>
+														</table>
+													</td>
+													<td class="pos_rel co_photo">CO PHOTO<br><img src="common/images/co_img.png" alt=""><small><a href="#"><i class="fa fa-pencil"></i></a></small></td>
+												</tr>
+											  </tbody>
+										</table>
+								</div>
+							</div>
+							<div class="portlet left_col store_location">
+								<div class="portlet-header">STORE LOCATION INFORMATION</div>
+								<div class="portlet-content">
+										<table class="table table-striped">
+											  <tbody>
+												<tr>
+												  <td class="pos_rel store_photo">STORE PHOTO<br><img src="common/images/store_photo.png" alt=""><small><a href="#"><i class="fa fa-pencil"></i></a></small></td>
+												  <td>
+													<table class="table table-striped internal_table">
+														<tbody>
+															<tr><td>UID #<br><span>12345678</span></td></tr>
+															<tr><td>DBA NAME<br><span>Chavez 1</span></td></tr>
+														</tbody>
+													</table>
+												  </td>
+												</tr>
+												<tr>
+												  <td>ADDRESS<br><span>123 Main St.</span></td>
+												  <td>PHONE<br><span>(123) 456-7890</span></td>
+												</tr>
+												<tr>
+												  <td>CITY<br><span>Oakland</span></td>
+												  <td>ZIP<br><span>12345</span></td>
+												</tr>
+												<tr>
+												  <td>STATE<br><span>CA</span></td>
+												  <td>FAX<br><span>(123) 456-7890</span></td>
+												</tr>
+												<tr class="corp_add">
+												  <td>
+													<table class="table table-striped internal_table">
+														<tbody>
+															<tr><td>COMPLIANCE MANAGER<br><span>Bill Souza</span></td></tr>
+															<tr><td>EMAIL ADDRESS<br><span>billsouza@crs.com</span></td></tr>
+															<tr><td>CM PASSWORD<br><span>************</span></td></tr>
+														</tbody>
+													</table>
+												  </td>
+												  <td class="pos_rel cm_photo">CM PHOTO<br><img src="common/images/cm_photo.png" alt=""><small><a href="#"><i class="fa fa-pencil"></i></a></small></td>
+												</tr>
+												<tr class="corp_add">
+												  <td colspan="2">CM ACCESS</td>
+												</tr>
+												<tr class="chbox">
+													 <td>
+														<input id="cb1" type="checkbox">
+														<label for="cb1">Compliance Officer</label>
+													</td>
+													<td>
+														<input id="cb2" type="checkbox">
+														<label for="cb2">Monitoring Logs</label>
+													</td>
+												</tr>
+												<tr class="chbox">
+													 <td>
+														<input id="cb3" type="checkbox">
+														<label for="cb3">Compliance Manager</label>
+													</td>
+													<td>
+														<input id="cb4" type="checkbox">
+														<label for="cb4">Licenses, Registrations, Contracts</label>
+													</td>
+												</tr>
+												<tr class="chbox">
+													 <td>
+														<input id="cb5" type="checkbox">
+														<label for="cb5">Financial Institution</label>
+													</td>
+													<td>
+														<input id="cb6" type="checkbox">
+														<label for="cb6">Legal/ Contracts</label>
+													</td>
+												</tr>
+												<tr class="chbox">
+													 <td>
+														<input id="cb7" type="checkbox">
+														<label for="cb7">IRS</label>
+													</td>
+													<td>
+														<input id="cb8" type="checkbox">
+														<label for="cb8">CTR/ SARs</label>
+													</td>
+												</tr>
+												<tr class="chbox">
+													 <td>
+														<input id="cb9" type="checkbox">
+														<label for="cb9">AML Compliance Program</label>
+													</td>
+													<td>
+														<input id="cb10" type="checkbox">
+														<label for="cb10">Other Documents</label>
+													</td>
+												</tr>
+												<tr class="chbox">
+													 <td>
+														<input id="cb11" type="checkbox">
+														<label for="cb11">Independent Review</label>
+													</td>
+													<td>
+														<input id="cb12" type="checkbox">
+														<label for="cb12">Auditor Folder</label>
+													</td>
+												</tr>
+											  </tbody>
+										</table>
+								</div>
+							</div>
+							<div class="portlet left_col edit_user">
+								<div class="portlet-header">ADD / EDIT / DELETE USERS</div>
+								<div class="portlet-content">
+										<button type="submit" class="btn btn-default add_new_btn">ADD NEW USER</button>
+										<ul class="add_user_list">
+											<li>
+												<img alt="" src="common/images/add_edit_user1.png">
+												<p><span>USERNAME</span>bsouza@capitalretailsolutions.com</p>
+												<ul class="edit_icons">
+													<li><a href="#"><i class="fa fa-pencil"></i></a></li>
+													<li><a href="#"><i class="fa fa-trash"></i></a></li>
+													<li><a href="#"><i class="fa fa-chevron-circle-down"></i></a></li>
+												</ul>
+											</li>
+										</ul>
+										<table class="table table-striped">
+											  <tbody>
+												<tr>
+												  <td>FIRST NAME<br><span>Bill</span></td>
+												  <td>LAST NAME<br><span>Souza</span></td>
+												  <td>STORE LOCATION<br><span>All</span></td>
+												</tr>
+												<tr>
+												  <td>TITLE<br><span>Wells Fargo Compliance Editor</span></td>
+												  <td>PASSWORD<br><span>************</span></td>
+												  <td>USER LEVEL<br><span>Auditor</span></td>
+												</tr>
+												<tr>
+												  <td colspan="3">MONITORING LOGS?<br><span>Yes</span></td>
+												</tr>
+											  </tbody>
+										</table>
+										<ul class="add_user_list">
+											<li>
+												<img alt="" src="common/images/add_edit_user2.png">
+												<p><span>USERNAME</span>koden@capitalretailsolutions.com</p>
+											</li>
+											<li>
+												<img alt="" src="common/images/add_edit_user3.png">
+												<p><span>USERNAME</span>dowens@capitalretailsolutions.com</p>
+											</li>
+										</ul>
+								</div>
+							</div>
+						</div>
+						<div class="column move_box_right">
+							<div class="portlet welcome_msg right_col">
+								<div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Typi non notare quam littera gothica, quam nunc putamus habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Eodem modo typi, qui nunc nobis videntur parum clari, fiant </div>
+							</div>
+						
+						
+							<div class="portlet right_col reports">
+								<div class="portlet-header">Reports</div>
+								<div class="portlet-content">
+									<ul class="reports_list">
+										<li>
+											<img src="common/images/report-chart-icon1.png" alt="">
+											<p><span>Report Title Here</span>Typi non notare quam littera gothica, quam nunc putamus habent.</p>
+											<ul class="edit_icons">
+												<li><a href="#"><i class="fa fa-pencil"></i></a></li>
+												<li><a href="#"><i class="fa fa-trash"></i></a></li>
+												<li><a href="#"><i class="fa fa-chevron-circle-down"></i></a></li>
+											</ul>
+										</li>
+										<li>
+											<img src="common/images/report-chart-icon2.png" alt="">
+											<p><span>Report Title Here</span>Typi non notare quam littera gothica, quam nunc putamus habent.</p>
+										</li>
+										<li>
+											<img src="common/images/report-chart-icon3.png" alt="">
+											<p><span>Report Title Here</span>Typi non notare quam littera gothica, quam nunc putamus habent.</p>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="portlet right_col imp_dates">
+								<div class="portlet-header">IMPORTANT DATES</div>
+								<div class="portlet-content">
+								<button class="btn btn-default add_new_btn" type="submit">ADD NEW DATE</button>
+									<ul class="imp_date_list">
+										<li>
+											<span><small>DEC 2013</small><strong>01</strong></span>
+											<p><span>AML Compliance Program...</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis </p>
+											<ul class="edit_icons">
+												<li><a href="#"><i class="fa fa-pencil"></i></a></li>
+												<li><a href="#"><i class="fa fa-trash"></i></a></li>
+												<li><a href="#"><i class="fa fa-chevron-circle-down"></i></a></li>
+											</ul>
+										</li>
+										<li>
+											<span><small>DEC 2013</small><strong>01</strong></span>
+											<p><span>AML Compliance Program...</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis </p>
+										</li>
+										<li>
+											<span><small>DEC 2013</small><strong>01</strong></span>
+											<p><span>AML Compliance Program...</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis </p>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="portlet right_col acc_info">
+								<div class="portlet-header">ACCOUNT INFORMATION</div>
+								<div class="portlet-content">
+										<table class="table table-striped">
+											  <tbody>
+												<tr>
+												  <td>FIRST NAME<br><span>Bill</span></td>
+												  <td>LAST NAME<br><span>Souza</span></td>
+												  <td>STORE LOCATION<br><span>All</span></td>
+												</tr>
+												<tr>
+												  <td colspan="2">USERNAME<br><span>bsouza@capitalretailsolutions.com</span></td>
+												  <td>PASSWORD<br><span>************</span></td>
+												</tr>
+											  </tbody>
+										</table>
+								</div>
+							</div>
+						</div>
+					</div>				
+				</div>
+				</div>
+			</div>
+			<div class="footer_menu">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<ul class="footer_nav">
+						<li><a href="#">Home</a></li>
+						<li><a href="#">Industries</a></li>
+						<li><a href="#">Products</a></li>
+						<li><a href="#">Free Tools</a></li>
+						<li><a href="#">Industry News</a></li>
+						<li><a href="#">FAQ</a></li>
+						<li><a href="#">About</a></li>
+						<li><a href="#">Contact Us</a></li>
+						<li><a href="#">Sign In</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="footer_middle_menu">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<h4>Additional MSB services offered by Capital Retail Solutions</h4>
+					<ul class="footer_middle_items">
+						<li><a href="#">Check Cashing</a></li>
+						<li><a href="#">Bill Pay</a></li>
+						<li><a href="#">Prepaid Cards</a></li>
+						<li><a href="#">Pinless International Calling</a></li>
+						<li><a href="#">Top-Ups</a></li>
+						<li><a href="#">Gift Card Buybacks</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="footer_bottom_section">
+				<div class="col-lg-4 col-md-4 col-sm-3 col-xs-12">
+					<ul class="social_icons">
+						<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="#"><i class="fa fa-linkedin-square"></i></a></li>
+					</ul>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-1 col-xs-12">
+					<div class="bottom_logo">
+						<img src="common/images/footer_logo.png" alt="">
+					</div>	
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-8 col-xs-12">
+					<div class="privacy_policy">
+						<ul>
+							<li><a href="#">Privacy Policy</a></li>
+							<li><a href="#">Terms of Use</a></li>
+						</ul>
+						<p>Copyright © 2015 Capital Compliance Experts. All rights reserved.</p>
+					</div>
+				</div>
+			</div>				
+	</div>
+				<script>
+					$(function() {
+						$( ".column" ).sortable({
+						connectWith: ".column",
+						handle: ".portlet-header",
+						cancel: ".portlet-toggle",
+						placeholder: "portlet-placeholder ui-corner-all"
+						});
+						$( ".portlet" )
+						.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+						.find( ".portlet-header" )
+						.addClass( "ui-widget-header ui-corner-all" )
+						.prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+						$( ".portlet-toggle" ).click(function() {
+						var icon = $( this );
+						icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+						icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
+						});
+					});
+				</script>
+				<!--  This script table header  -->
+				<script>$(document).ready(function() 
+					{ 
+					$("#myTable").tablesorter(); 
+					} 
+				); 
+				</script>
+				<script>
+				$(document).ready(function() { 
+					$("table") 
+					.tablesorter({widthFixed: false, widgets: ['zebra']}) 
+					.tablesorterPager({container: $("#pager")}); 
+				}); 
+				</script>
+
+				<script type="text/javascript">
+				jQuery.browser = {};
+				(function () {
+					jQuery.browser.msie = false;
+					jQuery.browser.version = 0;
+					if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+						jQuery.browser.msie = true;
+						jQuery.browser.version = RegExp.$1;
+					}
+				})();
+				</script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script> -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="common/js/bootstrap.min.js"></script>
+    <script src="common/js/custom.js"></script>
+  </body>
+</html>

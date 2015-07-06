@@ -1,0 +1,5 @@
+.chbox input[type="checkbox"]{display:inline!important;}
+.chbox td label {background: transparent!important;padding-left: 5px!important;}
+tr.chbox td label{line-height:10px!important;padding-bottom:8px!important;}
+.tablesorter th{width:15.5%!important;}
+#myTable td{width:14.6%!important;}

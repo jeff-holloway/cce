@@ -21,8 +21,10 @@ $lang['login_emailer']="Enter your e-mail address, and we will send you your log
 $lang['login_email']="E-Mail Address:";
 $lang['login_send']="E-Mail Login Information";
 
-
-
+$lang['login_created']="Login information was successfully created, and emailed to the address you provided, for ";
+$lang['login_creater']="Enter a unique username, password, and e-mail address to create your account.";
+$lang['login_create']="Create New Account";
+$lang['login_new']="Create Account";
 
 $lang['prompt_delete']="Are you sure you want to Delete?";
 

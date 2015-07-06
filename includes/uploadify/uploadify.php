@@ -28,6 +28,7 @@ THE SOFTWARE.
 $fp = fopen('data.txt', 'w');
 fwrite($fp, 'step 1');
 
+die;
 
 
 if (!empty($_FILES)) {

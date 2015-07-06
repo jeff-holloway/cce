@@ -1,8 +1,51 @@
+<? include('application.php'); ?>
 <?
+
+?>
+<? include('header.php'); ?>
+<?
+	$fname = "CCE_WebappWireframe_Home (1)-552fd77c43c7b.png";
+	echo get_filename_without_unique($fname);
+	die;
+	/*
+	This is screen is missing some functionality (similar to Compliance Officer screen). The view for a single Store Location should look like this:
+	https://docs.google.com/drawings/d/1461THo9KDIj7jK52mScuhWIo2Ra3FJ4ufUg0TCIJLnU/edit?usp=sharing. 
+	The view for a Merchant with multiple Store Locations should like this:  
+	https://docs.google.com/drawings/d/1fXCNQ5bWF-tanc0Ng8-J4FiF_kf04iBwt5243tNZcY0/edit?usp=sharing. 
+	And clicking on one of the locations should look like this: 
+	https://docs.google.com/drawings/d/1tSVhmBD7tjMj-qDIITMTFww02vZhNEkkJtWFisHEAnk/edit?usp=sharing or look the same as the single Store Location.
+	*/
+	
+	$test_user="mrr3_test";
+	$test_pass="";
+	
+ 	echo "(".$test_user." : ".$test_pass.") Decoder Ring=<b>'".mrr_encryptor($test_pass,$test_user)."'</b>";
+?>		
+<script>
+	$().ready(function() {
+		
+		$( ".tooltip" ).tooltip();
+		$( ".accordion" ).accordion();
+		$('input[type=button]').button();
+	});
+	
+	function test_dialog() {
+		$("#dialog_holder").dialog();
+		
+	}
+</script>
+<?
+include('footer.php');
+die;
+
 //test file....
+
+//phpinfo();
 
 /*
 NOTES:
+Uses MySQLi ... MySQL is deprecated past PHP 5.4.0
+
 must use language file(s) {English and Spanish for now....
 track user activity along the way.
 

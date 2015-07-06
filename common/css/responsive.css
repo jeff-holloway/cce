@@ -1,0 +1,121 @@
+@media only screen and (min-width: 1200px) {
+	.main_center_container {width:78%;border:0px black solid}
+}
+@media only screen and (min-width: 1420px) {
+	.main_center_container {width:80%;border:0px black solid}
+	
+}
+@media only screen and (min-width: 1650px) {
+	.main_center_container {width:84%;border:0px black solid}
+	#merchant_customers th {font-size:13px}
+}
+
+@media only screen and (min-width: 2000px) {
+	.main_center_container {width:87%;border:0px black solid}
+}
+@media only screen and (min-width: 2570px) {
+	.main_center_container {width:90%;border:0px black solid}
+}
+@media only screen and (min-width: 3500px) {
+	.main_center_container {width:92%;border:0px black solid}
+}
+@media only screen and (max-width: 1420px) {
+	#merchant_customers th {font-size:11px}
+	.mrr_search_cid {font-size:11px !important}
+	
+}
+@media only screen and (max-width: 1199px) {
+.privacy_policy {width: 100%;}
+.privacy_policy > p{font-size:11px;}
+.imp_date_list p{width:65%;}
+.navbar-nav > li > a {font-size:15px !important; padding:28px 11px 0 11px !important}
+
+
+
+}
+@media only screen and (max-width: 991px) {
+.top_menu .navbar-default .navbar-nav > li > a {font-size: 9px;padding-left: 5px;padding-right: 4px; min-height:75px;}
+.sign_in .btn.btn-default.navbar-btn{font-size:10.5px;}
+.privacy_policy > ul {float: none;text-align: center;}
+.privacy_policy > p {margin-bottom: 15px;text-align: center;}
+.column.move_box_left.ui-sortable {padding-right: 0;}
+.column{width:100%;}
+.btn.btn-default.navbar-btn.upload_btn{font-size:11px;}
+.banner_txt{top:10%;}
+.photo_sidebar_edit {left: 126px;top: 55px;}
+.banner_top > img {min-height: 75px;!important}
+.photo_edit > img { width: 151px;}
+#myTable td{font-size:9px;}
+.side_menu > li a{font-size:11.5px;}
+.welcome_heading {max-width:450px;border:0px black solid}
+.welcome_heading h2 {font-size:14px}
+.navbar-nav > li > a {font-size:13px !important}
+.navbar-nav .menu_ending {display:none}
+.logo {max-width:220px}
+.logo img {min-width:220px;max-width:220px}
+
+}
+@media only screen and (max-width: 812px) {
+	.navbar-nav > li > a {font-size:11.5px !important}
+}
+@media only screen and (max-width: 767px) {
+	#myTable td {font-size: 10px;}
+	.social_icons {float: none;text-align: center;}
+	td.pos_rel small{left:128.5px;}
+	td.pos_rel.co_photo small{left:53.5px;}
+	#myTable td, .tablesorter th{font-size:6.5px;}
+	.footer_nav > li{line-height:25px;}
+	.footer_middle_items > li{margin-bottom:5px;}
+	.footer_middle_menu h4{font-size:16px;}
+	.column {min-width:auto}
+	.mrr_tagline {display:none}
+	/*Offcanvas Css*/
+	/* outer div */
+	  .row-offcanvas {
+	    position: relative;
+	    left: 0;
+	    -webkit-transition: left .3s ease-in;
+	    -most-transition: left .3s ease-in;
+	    transition: left .3s ease-in;
+	  }
+	  
+	  /* sidebar */
+	  .sidebar-offcanvas {left: -51%;width: 48%; position: absolute; top: 0; height: 100%;background-color: #F7F7F7;padding: 0px;}
+	    /* content */
+	  .row-offcanvas.active {left: 51%;}
+	  /* Make the menu headers the same size as the bootstrap navbar */
+	  [data-role='panelbar'] .k-header {min-height: 50px;}
+	  .navbar.navbar-static-top.navbar-default {display: block;}
+	  //.welcome_heading h2 {font-size:12px}
+	  .welcome_heading {display:none}
+	  #merchant_customers th {font-size:9px}
+	  .mrr_search_cid {font-size:9px !important}
+
+}
+@media only screen and (max-width: 479px) {
+	.middle_main_content {max-width: 479px}
+#myTable td {font-size: 7px;}
+.cust_info .table.table-striped td, .store_location .table.table-striped td, .edit_user .table.table-striped td{display:table;width:100%;}
+.add_user_list p{font-size:8.5px;}
+.acc_info .table.table-striped td{display:table; width:100%;}
+.imp_date_list span strong{font-size:20px;line-height:20px;}
+.banner_top > img {min-height: 75px;!important}
+.banner_top h3{font-size:24px; line-height:24px;}
+.banner_top p{font-size:12.5px; line-height:13px;}
+.welcome_heading {display:none}
+.column {min-width:100%;}
+td.pos_rel small{left:120.5px;}
+
+td.pos_rel.co_photo small, td.pos_rel.store_photo small, td.pos_rel.cm_photo small {left: 45.5px;}
+ /* sidebar */
+  .sidebar-offcanvas {left: -86%;width: 80%; position: absolute; top: 0; height: 100%;background-color: #F7F7F7;padding: 0px;}
+    /* content */
+  .row-offcanvas.active {left: 86%;}
+  #merchant_customers th {font-size:10px}
+  .mrr_search_cid {font-size:10px !important}
+
+}
+@media only screen and (min-width: 768px) {
+	.mob_menu{display:none!important;}
+
+}
