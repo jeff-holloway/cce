@@ -1,4 +1,5 @@
 #Ignore these directories
 /temp*
 /documents*
+/images/_cache*
 .htaccess
