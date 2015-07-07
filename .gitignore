@@ -1,3 +1,4 @@
 #Ignore these directories
 /temp*
 /documents*
+.htaccess
