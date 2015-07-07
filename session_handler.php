@@ -1,6 +1,4 @@
 <?
-
-
 	$secs=(int) $defaultsarray['session_timeout'];		
 	$mrr_cookie_bake= time() +  $secs;				  		/* expires in SECS */
 	
@@ -19,32 +17,7 @@
 		{
 			header("Location: login.php");
 			die;
-		}
-		/*
-		
-		$mrrid=0;			
-				
-		if(isset($_COOKIE['user'])) {
-			
-			//$mrrid=mrr_cookie_login_for_session($_COOKIE['user']);
-		}
-		if(isset($_COOKIE['uuid']) && $_COOKIE['uuid'] != 'novalue' && $mrrid==0) 
-		{
-			$mrrid=1;			
-			setcookie("uuid", $_COOKIE['uuid'], $mrr_cookie_bake, "/");		//reset the cookie with 60 seconds
-		}
-		
-		if($mrrid==0) 
-		{
-			unset($_COOKIE['uuid']);
-			setcookie("uuid", 'novalue', $mrr_cookie_bake , "/");			//reset the cookie with 60 seconds
-			if($login_pg==0) 
-			{
-				header("Location: login.php");
-				die;
-			}
-		}
-		*/
+		}		
 	}
 	
 	if(!isset($_SESSION['view_access_level']))

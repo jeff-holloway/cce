@@ -275,6 +275,42 @@ else
 		</div>
 		<? } ?>		
 		
+		<? if(trim($namer) == "IRS") {  ?>
+		
+		<div class="portlet cust_info" id='portlet_doc_irs_information'>
+			<div class="portlet-header">IRS INFORMATION</div>
+			<div class="portlet-content">
+				<table style='width:100%;'>						
+					<tr>
+						<td valign='top'>
+							<table class="table table-striped internal_table">
+								<tbody>
+									<tr>
+										<td>ADDRESS<br><span id='irs_addr'></span></td>
+										<td>OFFICE PHONE<br><span id='irs_phone'></span></td>
+									</tr>
+									<tr>
+										<td>IRS EXAMINER<br><span id='irs_agent'></span></td>
+										<td>MOBILE PHONE<br><span id='irs_cell'></span></td>
+									</tr>									
+									<tr>
+										<td>EMAIL ADDRESS<br><span id='irs_email'></span></td>
+										<td>CASE CONTROL NUMBER<br><span id='irs_case'></span></td>
+									</tr>
+									<tr>
+										<td>EMPLOYER ID NUMBER<br><span id='irs_emp_id'></span></td>
+										<td>&nbsp;</td>
+									</tr>									
+								</tbody>
+							</table>
+						</td>												
+					</tr>
+				</table>					
+			</div>
+		</div>
+		
+		<? } ?>
+		
 		<? if(trim($namer) == "Financial Institution") {  ?>
 		
 		<div class="portlet cust_info" id='portlet_doc_financial_institution'>
@@ -315,38 +351,6 @@ else
 									<tr>
 										<td>EMAIL ADDRESS<br><span id='fi_aud_email'></span></td>
 										<td>REFERENCE #<br><span id='fi_aud_refer'></span></td>
-									</tr>									
-								</tbody>
-							</table>
-						</td>												
-					</tr>
-				</table>					
-			</div>
-		</div>
-		
-		<div class="portlet cust_info" id='portlet_doc_irs_information'>
-			<div class="portlet-header">IRS INFORMATION</div>
-			<div class="portlet-content">
-				<table style='width:100%;'>						
-					<tr>
-						<td valign='top'>
-							<table class="table table-striped internal_table">
-								<tbody>
-									<tr>
-										<td>ADDRESS<br><span id='irs_addr'></span></td>
-										<td>OFFICE PHONE<br><span id='irs_phone'></span></td>
-									</tr>
-									<tr>
-										<td>IRS EXAMINER<br><span id='irs_agent'></span></td>
-										<td>MOBILE PHONE<br><span id='irs_cell'></span></td>
-									</tr>									
-									<tr>
-										<td>EMAIL ADDRESS<br><span id='irs_email'></span></td>
-										<td>CASE CONTROL NUMBER<br><span id='irs_case'></span></td>
-									</tr>
-									<tr>
-										<td>EMPLOYER ID NUMBER<br><span id='irs_emp_id'></span></td>
-										<td>&nbsp;</td>
 									</tr>									
 								</tbody>
 							</table>
