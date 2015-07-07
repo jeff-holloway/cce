@@ -1274,7 +1274,7 @@ function display_all_awaiting_files()
           	
           },
           buttons: {
-          	"Close":  function() {	show_waiting_files_status(); dialog.dialog( "close" );  	}
+          	"Please click here to proceed":  function() {	show_waiting_files_status(); dialog.dialog( "close" );  	}
           }
      });
      

@@ -212,6 +212,19 @@ div#users-contain table td, div#users-contain table th { border: 1px solid #eee;
 .cce_message_display_txt {
 	font-weight:normal; font-size:12px; 
 	margin-left:5px;
+	/*background-color:#FFFFFF;	color:#000000; */
+}
+
+.pencil_img_only {color:#FFFFFF; background-color:#e19918; }
+.cce_message_display_img_only {
+	padding:0; border:0; margin-bottom:15px; 
+}
+.cce_message_display_hdr_img_only {
+	/* font-weight:normal; font-size:14px; margin-left:5px; */
+	display:none;
+}
+.cce_message_display_txt_img_only {
+	/* font-weight:normal; font-size:12px; margin-left:5px; */
 	background-color:#FFFFFF;
 	color:#000000;
 }

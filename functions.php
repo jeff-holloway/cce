@@ -456,7 +456,7 @@
      	if($row=mysqli_fetch_array($data))
      	{     
      		//see if user can edit this...
-     		$res_tab=mrr_display_cce_message_pad($row['id']);
+     		$res_tab=mrr_display_cce_message_pad($row['id'],1);
      		$editor="";
      		if(trim($res_tab)!="")
      		{
@@ -3115,22 +3115,21 @@
      	$data=simple_query($sql);
      	while($row=mysqli_fetch_array($data))
      	{     
+     		if(substr_count($row['message'],"<img") > 0 || substr_count($row['message'],"<IMG") > 0)		$img_only=1;
+     		     		
      		//see if user can edit this...
-     		$res_tab=mrr_display_cce_message_pad($row['id']);
+     		$res_tab=mrr_display_cce_message_pad($row['id'],0);
      		$editor="";
      		if(trim($res_tab)!="")
      		{
      			$editor="
      				<div style='float:right; margin-right:1px;'>
-     					<i class='fa fa-pencil' title='Edit CCE Message' onClick='allow_cce_message_edit(".$row['id'].",1);'></i>
+     					<i class='fa fa-pencil".($img_only > 0 ? " pencil_img_only" : "")."' title='Edit CCE Message' onClick='allow_cce_message_edit(".$row['id'].",1);'></i>
      				</div>
      			";
      		}
      		
-     		if(trim($row['message'])!="")		$cce++;
-     		
-     		if(substr_count($row['message'],"<img") > 0 || substr_count($row['message'],"<IMG") > 0)		$img_only=1;
-     		
+     		if(trim($row['message'])!="")		$cce++;    		
      		
      		//display normal message...
      		$mtab1.="
@@ -3157,22 +3156,22 @@
      	{     		
      		//$mtab1="";		//clear the system message if merchant message is available.
      		
+     		if(substr_count($row['message'],"<img") > 0 || substr_count($row['message'],"<IMG") > 0)		$img_only=1;
+     		
      		//see if user can edit this...
-     		$res_tab=mrr_display_cce_message_pad($row['id']);
+     		$res_tab=mrr_display_cce_message_pad($row['id'],0);
      		$editor="";
      		if(trim($res_tab)!="")
      		{
      			$editor="
 	     			<div style='float:right; margin-right:1px;'>
-	     				<i class='fa fa-pencil' title='Edit Customer Message' onClick='allow_cce_message_edit(".$row['id'].",2);'></i> 
+	     				<i class='fa fa-pencil".($img_only > 0 ? " pencil_img_only" : "")."' title='Edit Customer Message' onClick='allow_cce_message_edit(".$row['id'].",2);'></i> 
 	     			</div>
      			";
      			$edit_only.=$editor.$res_tab;
      		}
      			
      		if(trim($row['message'])!="")		$merch++;
-     		
-     		if(substr_count($row['message'],"<img") > 0 || substr_count($row['message'],"<IMG") > 0)		$img_only=1;
      		
      		//display normal message...
      		if(trim($row['subject'])!="" || trim($row['message'])!="")
@@ -3201,23 +3200,23 @@
      	{     		
      		//$mtab1="";		//clear the system message if store message is available.
      		
+     		if(substr_count($row['message'],"<img") > 0 || substr_count($row['message'],"<IMG") > 0)		$img_only=1;
+     		
      		//see if user can edit this...
-     		$res_tab=mrr_display_cce_message_pad($row['id']);
+     		$res_tab=mrr_display_cce_message_pad($row['id'],0);
      		$editor="";
      		if(trim($res_tab)!="")
      		{
      			$editor=" 
 	     			<div style='float:right; margin-right:1px;'>
-	     				<i class='fa fa-pencil' title='Edit Store Location Message' onClick='allow_cce_message_edit(".$row['id'].",3);'></i> 
+	     				<i class='fa fa-pencil".($img_only > 0 ? " pencil_img_only" : "")."' title='Edit Store Location Message' onClick='allow_cce_message_edit(".$row['id'].",3);'></i> 
 	     			</div>
      			";
      			$edit_only.=$editor.$res_tab;
      		}
      		
      		if(trim($row['message'])!="")		$store++;	
-     		
-     		if(substr_count($row['message'],"<img") > 0 || substr_count($row['message'],"<IMG") > 0)		$img_only=1;
-     		
+     		     		
      		//display normal message...
      		if(trim($row['subject'])!="" || trim($row['message'])!="")
      		{
@@ -5143,7 +5142,7 @@
 		</script>
 		<?			
 	}
-	function mrr_display_cce_message_pad($id=0)
+	function mrr_display_cce_message_pad($id=0,$show_headline=0)
 	{
 		$mrr_adder="";
 		
@@ -5202,9 +5201,16 @@
                
                
                $tab.="<div id='cce_message_editor_".$row['id']."' style='display:none;'>";
-               //$tab.=	"<b>Headline</b> <input type='text' name='cce_msg_subject_".$row['id']."' id='cce_msg_subject_".$row['id']."' value=\"".$row['subject']."\" class='longshort'>";	//<div style='margin:10px 0;'>tooltip </div>
-               $tab.=	"<input type='hidden' name='cce_msg_subject_".$row['id']."' id='cce_msg_subject_".$row['id']."' value=\"".$row['subject']."\">";
-               //$tab.= 	"<div style='clear:both;'></div><br>&nbsp;<br>";
+               
+               if($show_headline>0)
+               {
+               	$tab.=	"<b>Headline</b> <input type='text' name='cce_msg_subject_".$row['id']."' id='cce_msg_subject_".$row['id']."' value=\"".$row['subject']."\" class='longshort'>";	//<div style='margin:10px 0;'>tooltip </div>
+               }
+               else
+               {
+               	$tab.=	"<input type='hidden' name='cce_msg_subject_".$row['id']."' id='cce_msg_subject_".$row['id']."' value=\"".$row['subject']."\"><b>Use the Insert image button to substitute the message text with an image.</b>";
+               }
+               $tab.= 	"<div style='clear:both;'></div><br>&nbsp;<br>";
                $tab.=	"<textarea name='cce_msg_body_".$row['id']."' id='cce_msg_body_".$row['id']."' class='mceEditor'>".$row['message']."</textarea>";
                $tab.="</div>";
      	}
