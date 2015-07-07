@@ -1,8 +1,0 @@
-RewriteEngine On
-#First rewrite any request to the wrong domain to use the correct one (here www.)
-#RewriteCond %{HTTP_HOST} !^portal\.
-#RewriteRule ^(.*)$ https://portal_.capitalcomplianceexperts.com%{REQUEST_URI} [L,R=301]
-
-#Now, rewrite to HTTPS:
-#RewriteCond %{HTTPS} off
-#RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
