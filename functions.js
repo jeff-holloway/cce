@@ -1264,14 +1264,12 @@ function display_all_awaiting_files()
           autoOpen: false,
 		width: 'auto',
           modal: true,
-          open: function() {
-          	
+          open: function() {          	
           	$("#dialog-waiting-files select").selectmenu('destroy');
 			$("#dialog-waiting-files select").selectmenu();
           	
 			$('.linedate').datepicker();
-			$(".tooltip").tooltip();
-          	
+			$(".tooltip").tooltip();          	
           },
           buttons: {
           	"Please click here to proceed":  function() {	show_waiting_files_status(); dialog.dialog( "close" );  	}
