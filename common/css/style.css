@@ -67,7 +67,8 @@ ul.side_menu {margin-top:10px}
 
 .tablesorter tr {float:left; width:100%;}
 .tablesorter th {color: #fff;cursor: pointer;display: inline-block;font-family: AvenirLTStd-Roman;font-size: 8.5px;}
-#myTable td {display: inline-block;font-family: AvenirLTStd-Roman;font-size: 10.5px;}
+#myTable td {display: inline-block;font-family: AvenirLTStd-Roman;font-size: 10.5px;padding:5px 1px !important}
+#myTable td {font-size:10px;}	/* width:13%; */
 .table.table-striped tr td {padding-top: 0;}
 .tablesorter .fir_odd.odd {background: #f3ddba;}
 .tablesorter .odd {background: none repeat scroll 0 0 #e6e6e6;}
@@ -270,7 +271,7 @@ html, body, .wrapper {height: 100%;}
 
 
 .tablesorter th{}	/* width:13%; */
-#myTable td{font-size:10px;}	/* width:13%; */
+
 
 /* #merchant_customers { max-height:200px; overflow-y: auto; border-bottom:3px white solid} */
 #merchant_customers { max-height:200px; overflow-y: auto; }

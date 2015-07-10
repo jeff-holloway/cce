@@ -1872,6 +1872,7 @@ function load_merchants()
 			$('.buttonize').button();
 			
 			//$('.tablesorter').tablesorter();
+			recalc_search_cust_body();
 		}
 	});		
 }
@@ -3108,8 +3109,11 @@ function load_cust_search() {
 			{
 				mrr_tab=$(xml).find('mrrTab').text();
 				$('#merchant_customers').html(mrr_tab);
+				$('#merchant_customers').show();
 				//$('#cust_display_portlet').html(mrr_tab);
 				load_user_list();  
+				
+				recalc_search_cust_body();
 			}			
 			
 		}
@@ -3135,7 +3139,11 @@ function load_cust_search_v2() {
 			else
 			{
 				mrr_tab=$(xml).find('mrrTab').text();
+				console.log("loading info");
+				
 				$('#merchant_customers').html(mrr_tab);
+
+				recalc_search_cust_body();
 			}			
 			
 		}
@@ -4042,6 +4050,7 @@ function edit_user_account(id,moder)
 } 
 
 	function page_resize_calc() {
+		
 		// called on initial page load and any time the page/window is resized
 			
 			// on the main customer profile page, resize the center container to be the max width possible
@@ -4086,11 +4095,28 @@ function edit_user_account(id,moder)
 			// the main customer search box on the customer profile page
 			// this section adjusts the headers and spacing to make it look as nice as possible
 			// and to keep everything on one line.
-			if($('.search_cust_body').length > 0) {
+			
+			recalc_search_cust_body();
+			
+	}
+	
+	function recalc_search_cust_body() {
+		
+		//$('.search_box_cid2').remove();
+		
+		if($('.search_cust_body, .search_box').length > 0) {
+			
+				
+				width_search_box_legal_name = $('.search_box').width() * .55;
+				width_search_box_cid2 = $('.search_box').width() * .35;
+				
+				//console.log("New search_box_legal_name width: " + width_search_box_legal_name + " | search_box_cid2: " + width_search_box_cid2);
+				$('div.search_box_legal_name').css('width', width_search_box_legal_name + 'px');
+				$('div.search_box_cid2').css('width', width_search_box_cid2 + 'px');
 				
 				// make the width of the title bar match the contents (since it's shorter
 				// due to the scroll bar in the content box that isn't on the title bar).
-				$('.search_cust_header').css('width', $('.search_cust_body').width() + 'px');
+				//$('.search_cust_header').css('width', $('.search_cust_body').width() + 'px');
 				
 				// calculate the total used columns (since it probably won't be the full width)
 				// any unused column space will be added to the customer name column
@@ -4098,6 +4124,10 @@ function edit_user_account(id,moder)
 				$('.search_cust_header th').each(function() {
 					twidth += $(this).width();
 				});
+				
+				//$('.search_box_legal_name').css('width', '30px');
+				
+				
 
 				// figure out how much extra space we have to give to the customer name field
 				width_adjustment = $('.search_cust_header tr').width() - twidth;

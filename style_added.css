@@ -179,6 +179,7 @@ div#users-contain table td, div#users-contain table th { border: 1px solid #eee;
     margin: 0 1em 1em 0;
     padding: 0.3em;
     overflow:hidden;
+    border:1px #000000 solid;
   }
 .portlet-header {
     padding: 0.2em 0.3em;
@@ -322,6 +323,14 @@ input.large {min-width:250px}
 
 .phone_number_block { display:inline-block; width:100px; font-weight:bold; }
 
+.non_file_cabinet_hdr  { background-color:#FFFFFF; padding:8px 8px 0px 8px;  margin-bottom: 0px; border:0px solid #aaa; width:100%;}
+.non_file_cabinet_bdy  { background-color:#FFFFFF; padding:8px 8px 8px 8px;  margin-bottom: 0px; border:0px solid #aaa; width:100%;}
+
+.non_file_cabinet_hdr2  { background-color:#FFFFFF; padding:0px 8px 8px 0px;  margin-bottom: 0px; border:0px solid #aaa; width:100%;}
+.non_file_cabinet_bdy2  { background-color:#FFFFFF; padding:0px 8px 8px 0px;  margin-bottom: 0px; border:0px solid #aaa; width:100%;}
+
+.mrr_aud_file_wrapper_off { background-color:#FFFFFF; padding:8px 8px 8px 8px;  margin-bottom: 0px; border:0px solid #aaa; width:100%;}
+
 .auditor_file_cabinet { background-color:#FFFFFF; border:1px solid #aaa; padding:8px; width:100%; }
 .auditor_file_cabinet2 { background-color:#FFFFFF; border:1px solid #aaa; padding:8px; width:100%; margin-bottom: 10px; }
 
@@ -412,7 +421,7 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
 /*
 .portlet-content-mrr { border-color:#ebebeb;border-style: none solid solid;border-width: 0 1px 1px; width:100%; padding:5px;}
 */
-
+.mrr_portlet_border { border:1px solid #000000; }
 .mrr_portlet_auditor {  width:100%; color:#FFFFFF; background:#e19918;  padding:5px; }
 .mrr_aud_style {width:100%; color:#FFFFFF; background:#e19918; padding:5px; }
 
@@ -430,15 +439,15 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
 .search_box_cname { width:12%; }
 .search_box_dba { width:18%; }
 */
-.search_box_dba { width:27%; }
-.search_box_uid { width:13%; }
+.search_box_dba { width:27%; padding-left:7px !important}
+.search_box_uid { width:13%; max-width:54px}
 
-.search_box_addr { width:30%; }
-.search_box_city { width:11%; }
+.search_box_addr { width:26%; }
+.search_box_city { width:15%; }
 .search_box_state { width:11%; max-width:56px;}
 
-.search_box_legal_name {float:left;width:65% !important;padding-left:5px}
-.search_box_cid2 {float:left;width:30% !important}
+.search_box_legal_name {float:left;padding-left:25px;overflow:hidden;width:25%;border:0px red solid}
+.search_box_cid2 {float:left;width:15%;border:0px black solid}
 
 .search_merch_row { background-color:#AAAAAA; color:#000000;}
 .search_store_row { background-color:white;}
@@ -453,8 +462,10 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
 
 .mrr_search_indent {width: 19px; display:inline-block; }
 .mrr_search_indent_none {width: 0; display:inline-block; }
+.search_box_dba_indent {width:9px; display:inline-block; }
 .mrr_search_indent2 {width: 30%; display:inline-block; }
 .mrr_search_cid { color:#ffffff; font-size:12px;margin-right:4px}
+.mrr_search_legal_name_label {color: #ffffff}
 
 .mrr_button_left_margin { margin-left:5px; }
 

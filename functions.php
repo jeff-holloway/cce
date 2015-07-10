@@ -3671,7 +3671,7 @@
 				</table>
 			</div>
 			
-			<div style='border:0px red solid;float:left;width:100%;max-height:120px;overflow-y:scroll'>
+			<div style='border:0px red solid;float:left;width:100%;max-height:120px;'>
 			<table id='myTable' class='tablesorter search_cust_body'>
 			<tbody> 
 		";		//<th>ZIP</th> 
@@ -3782,15 +3782,15 @@
      	     	}								
 				
      			$tab.="     			
-     			<tr class='search_merch_row'> 						
-						<td colspan='6' style='width:100%'>
+     				<tr class='search_merch_row'> 						
+						<td colspan='6'>
 							<div class='search_box_legal_name'>
-								<span class='mrr_search_indent'>&nbsp;</span>
-								<span class='mrr_search_cid'>LEGAL NAME</span> 
+								<span class='mrr_search_legal_name_label'>LEGAL NAME</span> 
 								<span class='mrr_link_simulator_merch' id='merch_".$rowm['id']."_legal_name' onMouseOver='mrr_search_highlighter(".$rowm['id'].",1);' onMouseOut='mrr_search_highlighter(".$rowm['id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$rowm['id'].",0);' title='".str_replace("'","",trim($rowm['merchant']))."'>
 									".trim($rowm['merchant'])."
 								</span>
 							</div>
+
 
 							<div class='search_box_cid2'> 
 								<span class='mrr_search_cid'>CID#</span> 
@@ -3840,7 +3840,7 @@
                			$tab.="
                	     	<tr class='search_store_row'> 
           					<td class='search_box_dba'>
-          						<div><span class='mrr_search_indent_none'></span>
+          						<div><span class='search_box_dba_indent'></span>
           							<span class='mrr_link_simulator_store' id='store_".$row['id']."_name' onMouseOver='mrr_search_highlighter_store(".$row['id'].",1);' onMouseOut='mrr_search_highlighter_store(".$row['id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",".$row['id'].");' title='".str_replace("'","",$row['store_name'])."'>
           								".$row['store_name']."
           							</span>
@@ -7435,29 +7435,34 @@
   			{
   				$tab.="  			
        			<div class='portlet default_closed cust_info'>
-       				<div class='portlet-header'>COMPLIANCE MANAGER</div>
-          			<div class='portlet-content'>
-          				<table style='width:100%;'>			
-          					<tr>
-          					  	<td valign='top' width='30%'>
-          							<table class='table table-striped internal_table'>
-          								<tbody>
-          									<tr><td>STORE LOCATION<br><span>".$store_loc."</span></td></tr>
-          									<tr><td>&nbsp;</td></tr>
-          									<tr><td>COMPLIANCE MANAGER<br><span>".$namer."</span></td></tr>
-          									<tr><td>&nbsp;</td></tr>
-          									<tr><td>CM EMAIL ADDRESS<br><span>".$email."</span></td></tr>
-          									<tr><td>&nbsp;</td></tr>
-          									<tr><td>CM CELL NUMBER<br><span>".$cell."</span></td></tr>
-          									<tr><td>OFFICE PHONE<br><span>".$phone."</span></td></tr>
-          									<tr><td valign='top' class='pos_rel cm_photo mrr_cust_info'>CM PHOTO<br><img src='".$image."' alt='' width='".$user_thumb_width."'></td></tr>
-          								</tbody>
-          							</table>
-          						</td>          					  	
-          					  	<td valign='top' class='pos_rel cm_photo mrr_cust_info'>&nbsp;</td>	
-          					</tr>          								
-          				</table>				
-          			</div>  	
+       				<div class='non_file_cabinet_hdr'>	
+          				<div class='portlet-header'>COMPLIANCE MANAGER</div>
+          			</div>	
+          			<div class='non_file_cabinet_bdy'>
+          				<div class='portlet-content'>
+               				<table style='width:100%;'>			
+               					<tr>
+               					  	<td valign='top' width='30%'>
+               							<table class='table table-striped internal_table'>
+               								<tbody>
+               									<tr><td>STORE LOCATION<br><span>".$store_loc."</span></td></tr>
+               									<tr><td>&nbsp;</td></tr>
+               									<tr><td>COMPLIANCE MANAGER<br><span>".$namer."</span></td></tr>
+               									<tr><td>&nbsp;</td></tr>
+               									<tr><td>CM EMAIL ADDRESS<br><span>".$email."</span></td></tr>
+               									<tr><td>&nbsp;</td></tr>
+               									<tr><td>CM CELL NUMBER<br><span>".$cell."</span></td></tr>
+               									<tr><td>OFFICE PHONE<br><span>".$phone."</span></td></tr>
+               									<tr><td valign='top' class='pos_rel cm_photo mrr_cust_info'>CM PHOTO<br><img src='".$image."' alt='' width='".$user_thumb_width."'></td></tr>
+               								</tbody>
+               							</table>
+               						</td>          					  	
+               					  	<td valign='top' class='pos_rel cm_photo mrr_cust_info'>&nbsp;</td>	
+               					</tr>          								
+               				</table>				
+               			</div>  
+          				<div class='clearfix'></div>
+          			</div>       			
           		</div>		
        			";
   			}
