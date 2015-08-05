@@ -3,7 +3,10 @@
 $_SESSION['selected_doc_type_id']=0;
 ?>
 <? include('header.php') ?>
-
+<?
+$lock_merchant=$_SESSION['selected_merchant_id'];
+$lock_store=$_SESSION['selected_store_id'];
+?>
 <div class="column" style='width:100%;'>		
 		
      <div id='auditor_folder_holder' style='width:100%;'>
@@ -31,8 +34,8 @@ $_SESSION['selected_doc_type_id']=0;
 </div>
 
 <!--Form for New Document Name -->
-<div id="dialog-form_file_rename" title="Rename Document" style='display:none; width:500px;'>
-	<p class="validateTips">Give this file a New Document Name</p>
+<div id="dialog-form_file_rename" title="Edit Document" style='display:none; width:500px;'>
+	<p class="validateTips">Edit Settings for this Document</p>
 	<div class='field'>
 		<label for="email">Old Name</label>
 		<span><br><span id='old_doc_file_name'></span></span>
@@ -75,7 +78,7 @@ $_SESSION['selected_doc_type_id']=0;
 	</div>
 	
 	<div class='field'>
-		<label for="user_name">New Display Date</label>
+		<label for="user_name">New Document Date</label>
 		<span>
 			<input type="text" name="document_date_rename" id="document_date_rename" value="" class='linedate' style='width:100px;'>
 			<!-- Allow form submission with keyboard without duplicating the dialog button -->
@@ -89,11 +92,11 @@ $_SESSION['selected_doc_type_id']=0;
 	var doc_pg=0;				//used for search results display...index/auditor page should always be 0.
 	
 	$().ready(function() {			
-		auditor_folder();		
+		auditor_folder();	
      });
          
 	function auditor_folder()
-	{		
+	{			
 		$('#auditor_folder_holder').show();			
 		<? if($_SESSION['access_level']==45) { ?>
 			//Auditor 2 section "Filing Cabinet", only displays the files for download.

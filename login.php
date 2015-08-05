@@ -122,17 +122,33 @@
 			$_SESSION['merchant_id']=$row['merchant_id'];
 			$_SESSION['store_id']=$row['store_id'];
 			
-			$_SESSION['reset_password']=$row['reset_password'];
+			$_SESSION['reset_password']=$row['reset_password'];	
 			
-			$_SESSION['selected_user_id']=$row['id'];
-			$_SESSION['selected_merchant_id']=$_SESSION['merchant_id'];
-			$_SESSION['selected_store_id']=$_SESSION['store_id'];
+			$_SESSION['special_merchant_id']=0;
 			
-			if($_SESSION['access_level'] > 80)
+			if($_SESSION['access_level'] == 70)
 			{
-				$_SESSION['selected_user_id']=0;
-				$_SESSION['selected_merchant_id']=0;
+				$_SESSION['selected_user_id']=0;				
+				$_SESSION['selected_merchant_id']=$_SESSION['merchant_id'];
+				$_SESSION['selected_store_id']=$_SESSION['store_id'];
+				$_SESSION['merchant_id']=0;
+				$_SESSION['store_id']=0;
+			}
+			elseif($_SESSION['access_level'] == 61 || $_SESSION['access_level'] == 60)
+			{
+				$_SESSION['selected_user_id']=0;				
+				$_SESSION['selected_merchant_id']=$row['merchant_id'];
 				$_SESSION['selected_store_id']=0;
+				$_SESSION['merchant_id']=$row['merchant_id'];
+				$_SESSION['store_id']=0;
+				
+				$_SESSION['special_merchant_id']=$row['merchant_id'];
+			}
+			else
+			{
+				$_SESSION['selected_user_id']=$row['id'];	
+				$_SESSION['selected_merchant_id']=$_SESSION['merchant_id'];
+				$_SESSION['selected_store_id']=$_SESSION['store_id'];
 			}
 			
 			$_SESSION['selected_doc_type_id']=0;

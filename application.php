@@ -11,14 +11,15 @@
 		session_destroy();	
 	}
 	
-	include_once('config.php'); 			// database settings
+	include_once('config.php'); 				// database settings
 	
-	include_once('language_pack.php'); 	// language packs
-	include_once('debug_settings.php');	// sets default debug settings
-	include_once('defaults.php'); 		// program defaults
-	include_once('functions.php'); 		// core functions
+	include_once('language_pack.php'); 		// language packs
+	include_once('debug_settings.php');		// sets default debug settings
+	include_once('defaults.php'); 			// program defaults
+	include_once('functions.php'); 			// core functions
+	include_once('functions_quicklinks.php'); 	// quick-links functions
 
-	include_once('session_handler.php'); 	// take a guess
+	include_once('session_handler.php'); 		// take a guess
 
 	include_once('includes/thumbnail.inc.php');	// thumbnail generator code (obviously)
 	include_once('class/class.smtp.php');

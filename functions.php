@@ -1161,7 +1161,7 @@
 			where id = '".sql_friendly($_SESSION['user_id'])."'
 		";	
 		
-		if($id>0 || $cd>0)
+		if($id>=0 || $cd>0)
 		{
 			$sql = "
 				select email		
@@ -1186,7 +1186,7 @@
 			where id = '".sql_friendly($_SESSION['user_id'])."'
 		";
 		
-		if($id>0 || $cd>0)
+		if($id>=0 || $cd>0)
 		{
 			$sql = "
 				select first_name,last_name			
@@ -1328,6 +1328,10 @@
 					if($test_valid > 0)		$valid=2;
 				}
 			}
+			elseif($has_access == 61)
+			{	
+				if($merchant==$action_id)		$valid=2;		//view info page...if not his/her merchant. no point in checking target page.
+			}
 			elseif($has_access <= 60)
 			{	
 				if($merchant==$action_id)		$valid=1;		//too low to view user info page...if not his/her merchant. no point in checking target page.
@@ -1370,6 +1374,14 @@
 					$test_valid=mrr_get_merchant_teirs_validation($merchant,$cur_merch,$action_id);	//see if the user's merchant ID is parent company to the checked merchant/store combo...	
 					if($test_valid > 0)		$valid=2;
 				}
+			}
+			elseif($has_access == 61 && $merchant==$cur_merch)
+			{	
+				$valid=2;									//view/edit info page...if not his/her merchant. no point in checking target page.
+			}
+			elseif($has_access == 60 && $merchant==$cur_merch)
+			{	
+				$valid=1;									//view info page...if not his/her merchant. no point in checking target page.
 			}
 			elseif($has_access <= 20)
 			{	
@@ -2188,7 +2200,7 @@
      	$selbox.="<option value='0'".$sel.">".$prompt."</option>";	
      			
      	$mrr_adder="where deleted=0";		// and access_level <= '".sql_friendly($_SESSION['view_access_level'])."' 
-     	if($_SESSION['selected_merchant_id'] > 0)	
+     	if($_SESSION['merchant_id']==0 && $_SESSION['selected_merchant_id'] > 0)	
      	{
      		if($_SESSION['access_level'] < 70) 	$mrr_adder.=" and id='".sql_friendly($_SESSION['selected_merchant_id'])."'";
 		} 
@@ -2202,8 +2214,7 @@
      	$sql = "
      		select * 
      		from merchants			
-     		".$mrr_adder."
-     		
+     		".$mrr_adder."     		
      		order by merchant asc,id asc
      	";
      	$data=simple_query($sql);
@@ -2215,7 +2226,7 @@
      		$selbox.="<option value='".$row['id']."'".$sel.">".$namer."</option>";	
      		
      		//add subsidiaries to the list from this parent company
-     		if($_SESSION['merchant_id'] > 0 && $_SESSION['access_level'] >= 70 )
+     		if(($_SESSION['merchant_id'] > 0 || $_SESSION['selected_merchant_id'] > 0) && $_SESSION['access_level'] >= 70 )
      		{
      			$selbox.=mrr_get_merchant_teirs_selected($row['id'],$pre);	
      		}
@@ -2593,45 +2604,13 @@
      	if($pre==0)		$sel=" selected";		else	$sel="";
      	$selbox.="<option value='0'".$sel.">".$prompt."</option>";	
      			
-     	$mrr_adder="where deleted=0";		// and access_level <= '".sql_friendly($_SESSION['view_access_level'])."'
-     	     	
+     	$mrr_adder="where deleted=0";		
+     	
+     	if($cd ==1)	$mrr_adder.=" and archived>0";		else		$mrr_adder.=" and archived=0";    
+     	   	
      	//get preselected user id...for merchant and store selected
      	if($field=="ms_co_user_id" || $field=="ms_grp_user_id" || $field=="mst_cm_user_id")
-     	{
-			/*
-			if($field=="ms_co_user_id" || $field=="ms_grp_user_id" || $field=="mst_cm_user_id")
-			{
-     			if($_SESSION['merchant_id'] == 0 && $_SESSION['selected_merchant_id'] > 0)
-               	{
-               		$mrr_adder.=" and merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."' and merchant_id > 0";
-               	}
-               	elseif($_SESSION['merchant_id'] > 0)
-               	{
-               		$mrr_adder.=" and merchant_id='".sql_friendly($_SESSION['merchant_id'])."' and merchant_id > 0";
-               	}   
-               	else
-               	{
-               		$mrr_adder.=" and merchant_id = 0 and merchant_id > 0";	
-               	} 
-          	}      	
-		
-     		if($field=="mst_cm_user_id")
-     		{
-               	if($_SESSION['store_id'] ==0 && $_SESSION['selected_store_id'] > 0)
-               	{
-               		//$mrr_adder.=" and store_id='".sql_friendly($_SESSION['selected_store_id'])."' and store_id > 0";
-               	}
-               	elseif($_SESSION['store_id'] > 0)	
-               	{
-               		//$mrr_adder.=" and store_id='".sql_friendly($_SESSION['store_id'])."' and store_id > 0";
-               	} 
-               	else
-               	{
-               		//$mrr_adder.=" and store_id = 0 and store_id > 0";		//
-               	} 
-     		}
-     		*/
-     		
+     	{     		
      		if($field=="ms_co_user_id")
 			{
      			if($_SESSION['merchant_id'] == 0 && $_SESSION['selected_merchant_id'] > 0)
@@ -2667,12 +2646,12 @@
                	{
                		$mrr_adder.=" and (
                						(merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."' and merchant_id > 0)
-               						 or 
-               						 (merchant_id=0 and access_level='70')
-               						 or
-               						 id='".sql_friendly($_SESSION['selected_user_id'])."'
-               						 or 
-               						 access_level>=80
+               						or 
+               						(merchant_id=0 and access_level='70')
+               						or
+               						id='".sql_friendly($_SESSION['selected_user_id'])."'
+               						or 
+               						access_level>=80
                					)";
                	}
                	elseif($_SESSION['merchant_id'] > 0)
@@ -2695,7 +2674,15 @@
                	//merchant is set...
                	if($_SESSION['merchant_id'] == 0 && $_SESSION['selected_merchant_id'] > 0)
                	{
-               		$mrr_adder.=" and ((merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."' and merchant_id > 0)  or access_level>=80)";
+               		$mrr_adder.=" and (
+               						(merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."' and merchant_id > 0)
+               						or 
+               						(merchant_id=0 and access_level='70')
+               						or
+               						id='".sql_friendly($_SESSION['selected_user_id'])."'
+               						or 
+               						access_level>=80
+               					)";
                	}
                	elseif($_SESSION['merchant_id'] > 0)
                	{
@@ -2704,50 +2691,12 @@
                	else
                	{
                		$mrr_adder.=" and ((merchant_id = 0 and merchant_id > 0)  or access_level>=80)";	
-               	} 
-               	
-               	//...store
-               	/*
-               	if($_SESSION['store_id'] ==0 && $_SESSION['selected_store_id'] > 0)
-               	{
-               	   	$mrr_adder.=" and (
-          							(store_id='".sql_friendly($_SESSION['selected_store_id'])."' or store_id='0')
-          						 	
-               				)";		// and access_level='40'	or id='".sql_friendly($_SESSION['selected_user_id'])."'	
-               	}
-               	elseif($_SESSION['store_id'] ==0 && $_SESSION['selected_store_id'] == 0)
-               	{
-               	   	$mrr_adder.=" and (
-          							store_id=0
-          						 	or
-               					 	id='".sql_friendly($_SESSION['selected_user_id'])."'
-               				)";
-               	}
-               	elseif($_SESSION['store_id'] > 0)	
-               	{
-               		$mrr_adder.=" and store_id='".sql_friendly($_SESSION['store_id'])."' and store_id > 0";
-               	} 
-               	*/
+               	}              	
                	
                	if($_SESSION['selected_user_id'] > 0)
                	{
-               		$mrr_adder=" where deleted=0 and (id='".sql_friendly($_SESSION['selected_user_id'])."' or (merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."'))";	// and store_id=0 and access_level='40'
-               	}
-               	
-               	/*               	
-               	if($_SESSION['store_id'] ==0 && $_SESSION['selected_store_id'] > 0)
-               	{
-               		//$mrr_adder.=" and store_id='".sql_friendly($_SESSION['selected_store_id'])."' and store_id > 0";
-               	}
-               	elseif($_SESSION['store_id'] > 0)	
-               	{
-               		//$mrr_adder.=" and store_id='".sql_friendly($_SESSION['store_id'])."' and store_id > 0";
-               	} 
-               	else
-               	{
-               		//$mrr_adder.=" and store_id = 0 and store_id > 0";		//
-               	} 
-               	*/
+               		//$mrr_adder=" where deleted=0 and (id='".sql_friendly($_SESSION['selected_user_id'])."' or (merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."'))";	// and store_id=0 and access_level='40'
+               	}               	
      		}
 		}
      	else
@@ -2763,24 +2712,8 @@
           	else
           	{
           		$mrr_adder.=" and (merchant_id = 0 or access_level>=80)";	
-          	} 
-          	/*
-          	if($_SESSION['store_id'] ==0 && $_SESSION['selected_store_id'] > 0)
-          	{
-          		$mrr_adder.=" and store_id='".sql_friendly($_SESSION['selected_store_id'])."'";
-          	}
-          	elseif($_SESSION['store_id'] > 0)	
-          	{
-          		$mrr_adder.=" and store_id='".sql_friendly($_SESSION['store_id'])."'";
-          	}  
-          	else
-          	{
-          		$mrr_adder.=" and store_id = 0";	
-          	}     
-          	*/    			
-     	}
-     	
-     	if($cd ==1)	$mrr_adder.=" and archived>0";		else		$mrr_adder.=" and archived=0";  
+          	} 	
+     	}     	
      	   	
      	$sql = "
      		select * 
@@ -3745,12 +3678,22 @@
 	     	$store=$_SESSION['store_id'];	
 	     }
 	     
+	     
+	     if($_SESSION['access_level'] == 61 || $_SESSION['access_level'] == 60)
+	     {
+	     	//$search_filer2.=" and (merchants.id='".sql_friendly($_SESSION['selected_merchant_id'])."' or merchants.parent_company_id='".sql_friendly($_SESSION['selected_merchant_id'])."')";	
+	     	
+	     	if(trim($filter)=="")		$search_filer="";
+	     	$store=0;
+	     }
+	     
 	     $cntr=0;
 	     
 	     $last_cid=0;
 	     
 	     
 	     //get all merchants that have no stores  (order switched to show all customers together regardless of store number.... May 2015).
+	     $sql="";
 	     $sqlm="
 	     	select merchants.*   		     		
 	     		
@@ -3888,269 +3831,7 @@
      			     			  				
 			}	//end valid merchant				  
 	     }	//end merchant list...
-	     
-	     
-	     //OLD CODE BELOW...remove when no longer needed for reference...	     
-	     /*
-	     $sql="
-	     	select store_locations.*,
-	     		merchants.merchant
-	     	from merchants	     		
-	     		left join store_locations on store_locations.merchant_id=merchants.id
-	     	where merchants.deleted=0
-	     		and merchants.archived=0	     		
-	     		and store_locations.archived=0
-	     		and store_locations.deleted=0 	     		
-	     		".($merchant > 0 ? " and store_locations.merchant_id='".sql_friendly($merchant)."'" : "")."
-	     		".($store > 0 ? " and store_locations.id='".sql_friendly($store)."'" : "")."
-	     		".$search_filer."
-	     	order by merchants.merchant asc,store_locations.merchant_id asc, store_locations.store_name asc, store_locations.store_number asc, store_locations.id desc
-	     ";		// and (store_locations.merchant_id='".sql_friendly($merchant)."' or merchants.parent_company_id='".sql_friendly($merchant)."')
-	     $data = simple_query($sql);
-	     while($row = mysqli_fetch_array($data))
-	     {
-	     	$edit_mode1="";
-			$valid_user1=check_user_edit_access('merchants',$row['merchant_id'],$_SESSION['user_id']);
-			if($valid_user1==1)		$edit_mode1="readonly";				
-			
-			$edit_mode2="";
-			$valid_user2=check_user_edit_access('store_locations',$row['id'],$_SESSION['user_id']);
-			if($valid_user2==1)		$edit_mode2="readonly";	
-			
-			if($store==0)
-			{	//no store selected, so use same access as the merchant.
-				$edit_mode2=$edit_mode1;	
-				$valid_user2=$valid_user1;
-				$edit_mode2=$edit_mode1;
-			}
-						
-			if($valid_user1 > 0 && $valid_user2 > 0)
-			{				
-				$click_link1="&nbsp;";
-          		if($edit_mode1=="")
-          		{
-          			$click_link1="<span class='mrr_link_simulator'  onclick='edit_merchant(".$row['merchant_id'].",1);'>
-          						<img src='/images/edit_small.png' alt='Edit' border='0' width='17' height='15' class='tooltip' title='Click to edit this Customer'>
-          					</span>";
-     	     	}
-				
-				
-				$click_link2="&nbsp;";
-          		if($edit_mode2=="")
-          		{
-          			$click_link2="<span class='mrr_link_simulator' onclick='edit_store_location(".$row['id'].",1);'>
-          						<img src='/images/edit_small.png' alt='Edit' border='0' width='17' height='15' class='tooltip' title='Click to edit this merchant store Customer'>
-          					</span>";
-     	     	}
-				
-				//".$click_link1."".$click_link2."
-				
-				
-				if($last_cid!=$row['merchant_id'])
-				{
-					/ *
-					$tab.="
-     	     		<tr class='odd2'> 
-						<td class='search_box_cid'><div>&nbsp;&nbsp;<span class='mrr_link_simulator'  onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",0);' title='".$row['merchant_id']."'>".$row['merchant_id']."</span></div></td> 
-						<td class='search_box_cname'><div><span class='mrr_link_simulator'  onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",0);' title='".str_replace("'","",trim($row['merchant']))."'>".trim($row['merchant'])."</span></div></td> 
-						<td class='search_box_uid'><div>&nbsp;</div></td> 
-						<td class='search_box_dba'><div>&nbsp;</div></td> 
-						<td class='search_box_addr'><div>&nbsp;</div></td> 
-						<td class='search_box_city'><div>&nbsp;</div></td> 
-						<td class='search_box_state'><div>&nbsp;</div></td> 					
-					</tr> 
-     				";     //<td>".$row['zip']."</td>".(trim($row['address2'])!="" ? "<br>".$row['address2'] : "")."
-     				* /
-     				$tab.="
-     	     		<tr class='search_merch_row'> 						
-						<td colspan='6' style='width:100%'>
-							<div class='search_box_legal_name'>
-								<span class='mrr_search_cid'>LEGAL NAME</span> 
-								<span class='mrr_link_simulator_merch' id='merch_".$row['merchant_id']."_legal_name' onMouseOver='mrr_search_highlighter(".$row['merchant_id'].",1);' onMouseOut='mrr_search_highlighter(".$row['merchant_id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",0);' title='".str_replace("'","",trim($row['merchant']))."'>
-									".trim($row['merchant'])."
-								</span>
-							</div>
-
-							<div class='search_box_cid2'> 
-								<span class='mrr_search_cid'>CID#</span> 
-								<span class='mrr_link_simulator_merch' id='merch_".$row['merchant_id']."_cid_number' onMouseOver='mrr_search_highlighter(".$row['merchant_id'].",1);' onMouseOut='mrr_search_highlighter(".$row['merchant_id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",0);' title='".$row['merchant_id']."'>
-									".$row['merchant_id']."
-								</span>
-							</div>
-						</td>  
-					
-					</tr> 
-     				";     //<td>".$row['zip']."</td>".(trim($row['address2'])!="" ? "<br>".$row['address2'] : "")."
-				}
-				
-				$last_cid=$row['merchant_id'];
-				/ *
-     	     	$tab.="
-     	     	<tr class='even2'> 
-					<td class='search_box_cid'><div>&nbsp;&nbsp;&nbsp;</div></td> 
-					<td class='search_box_cname'><div>&nbsp;</div></td> 
-					<td class='search_box_dba'><div><span class='mrr_link_simulator'  onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",".$row['id'].");' title='".str_replace("'","",$row['store_name'])."'>".$row['store_name']."</span></div></td> 
-					<td class='search_box_uid'><div><span class='mrr_link_simulator'  onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",".$row['id'].");' title='".str_replace("'","",$row['store_number'])."'>".$row['store_number']."</span></div></td> 
-					<td class='search_box_addr'><div title='".str_replace("'","",$row['address1'])."'>".$row['address1']."</div></td> 
-					<td class='search_box_city'><div title='".str_replace("'","",$row['city'])."'>".$row['city']."</div></td> 
-					<td class='search_box_state'><div title='".str_replace("'","",$row['state'])."'>".$row['state']."</div></td> 					
-				</tr> 
-     			";     //<td>".$row['zip']."</td>".(trim($row['address2'])!="" ? "<br>".$row['address2'] : "")."
-     			* /
-     			$tab.="
-     	     	<tr class='search_store_row'> 
-					<td class='search_box_dba'>
-						<div><span class='mrr_search_indent'>&nbsp;</span>
-							<span class='mrr_link_simulator_store' id='store_".$row['id']."_name' onMouseOver='mrr_search_highlighter_store(".$row['id'].",1);' onMouseOut='mrr_search_highlighter_store(".$row['id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",".$row['id'].");' title='".str_replace("'","",$row['store_name'])."'>
-								".$row['store_name']."
-							</span>
-						</div>
-					</td> 
-					<td class='search_box_uid'>
-						<div>
-							<span class='mrr_link_simulator_store' id='store_".$row['id']."_num' onMouseOver='mrr_search_highlighter_store(".$row['id'].",1);' onMouseOut='mrr_search_highlighter_store(".$row['id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",".$row['id'].");' title='".str_replace("'","",$row['store_number'])."'>
-								".$row['store_number']."
-							</span>
-						</div>
-					</td> 
-					<td class='search_box_addr'>
-						
-						<div>
-							<span class='mrr_link_simulator_store' id='store_".$row['id']."_addr' onMouseOver='mrr_search_highlighter_store(".$row['id'].",1);' onMouseOut='mrr_search_highlighter_store(".$row['id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",".$row['id'].");' title='".str_replace("'","",$row['address1'])."'>
-								".$row['address1']."
-							</span>
-						</div>
-					</td> 
-					<td class='search_box_city'>
-						
-						<div>
-							<span class='mrr_link_simulator_store' id='store_".$row['id']."_city' onMouseOver='mrr_search_highlighter_store(".$row['id'].",1);' onMouseOut='mrr_search_highlighter_store(".$row['id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",".$row['id'].");' title='".str_replace("'","",$row['city'])."'>
-								".$row['city']."
-							</span>
-						</div>
-					</td> 
-					<td class='search_box_state'>
-						
-						<div>
-							<span class='mrr_link_simulator_store' id='store_".$row['id']."_state' onMouseOver='mrr_search_highlighter_store(".$row['id'].",1);' onMouseOut='mrr_search_highlighter_store(".$row['id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['merchant_id'].",".$row['id'].");' title='".str_replace("'","",$row['state'])."'>
-								".$row['state']."
-							</span>
-						</div>
-					</td> 					
-				</tr> 
-     			";     //<td>".$row['zip']."</td>".(trim($row['address2'])!="" ? "<br>".$row['address2'] : "")."
-     			
-     			
-     			$cntr++;	      			
-     			
-     			//now get any merchants connected to this one....
-	     		//if($_SESSION['access_level'] >=70)		$tab.=mrr_cascade_merchant_locs_search($row['merchant_id'],$edit_mode1,$edit_mode2,$reload_flag,$show_archived); 	
-			}					     	
-	     }       
-	          
-	     //now get all merchants that have no stores
-	     $sql="
-	     	select merchants.*,
-	     		(select count(*) from store_locations where store_locations.merchant_id=merchants.id and store_locations.archived=0 and store_locations.deleted=0) as store_count	     		
-	     		
-	     	from merchants
-	     	where merchants.deleted=0
-	     		and merchants.archived=0
-	     		and (select count(*) from store_locations where store_locations.merchant_id=merchants.id and store_locations.archived=0 and store_locations.deleted=0) = 0
-	     		".($merchant > 0 ? " and (merchants.id='".sql_friendly($merchant)."' or merchants.parent_company_id='".sql_friendly($merchant)."')" : "")."
-	     		".$search_filer2."
-	     	order by merchants.merchant asc,merchants.id asc
-	     ";		//
-	     $data = simple_query($sql);
-	     while($row = mysqli_fetch_array($data))
-	     {
-	     	$edit_mode1="";
-			$valid_user1=check_user_edit_access('merchants',$row['id'],$_SESSION['user_id']);
-			if($valid_user1==1)		$edit_mode1="readonly";				
-			
-			if($valid_user1 > 0)
-			{				
-				$click_link1="&nbsp;";
-          		if($edit_mode1=="")
-          		{
-          			$click_link1="<span class='mrr_link_simulator'  onclick='edit_merchant(".$row['id'].",1);'>
-          						<img src='/images/edit_small.png' alt='Edit' border='0' width='17' height='15' class='tooltip' title='Click to edit this Customer'>
-          					</span>";
-     	     	}								
-				
-				//".$click_link1."".$click_link2."
-				/ *
-     	     	$tab.="
-     	     	<tr class='odd2'> 
-					<td class='search_box_cid'><div>&nbsp;&nbsp;<span class='mrr_link_simulator'  onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['id'].",0);' title='".$row['id']."'>".$row['id']."</span></div></td> 
-					<td class='search_box_cname'><div><span class='mrr_link_simulator'  onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['id'].",0);' title='".str_replace("'","",trim($row['merchant']))."'>".trim($row['merchant'])."</span></div></td> 
-					<td class='search_box_uid'><div>&nbsp;</div></td> 
-					<td class='search_box_dba'><div>&nbsp;</div></td> 
-					<td class='search_box_addr'><div>&nbsp;</div></td> 
-					<td class='search_box_city'><div>&nbsp;</div></td> 
-					<td class='search_box_state'><div>&nbsp;</div></td> 
-				</tr> 
-     			";     
-     			//<div title='".str_replace("'","",$row['address1'])."'>".$row['address1']."</div>
-     			//<div title='".str_replace("'","",$row['city'])."'>".$row['city']."</div>
-     			//<div title='".str_replace("'","",$row['state'])."'>".$row['state']."</div>
-     			//<td>".$row['zip']."</td>".(trim($row['address2'])!="" ? "<br>".$row['address2'] : "")."
-     			* /
-     			
-     			$tab.="
-     			
-     			<tr class='search_merch_row'> 						
-						<td colspan='6' style='width:100%'>
-							<div class='search_box_legal_name'>
-								<span class='mrr_search_cid'>LEGAL NAME</span> 
-								<span class='mrr_link_simulator_merch' id='merch_".$row['id']."_legal_name' onMouseOver='mrr_search_highlighter(".$row['id'].",1);' onMouseOut='mrr_search_highlighter(".$row['id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['id'].",0);' title='".str_replace("'","",trim($row['merchant']))."'>
-									".trim($row['merchant'])."
-								</span>
-							</div>
-
-							<div class='search_box_cid2'> 
-								<span class='mrr_search_cid'>CID#</span> 
-								<span class='mrr_link_simulator_merch' id='merch_".$row['id']."_cid_number' onMouseOver='mrr_search_highlighter(".$row['id'].",1);' onMouseOut='mrr_search_highlighter(".$row['id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['id'].",0);' title='".$row['id']."'>
-									".$row['id']."
-								</span>
-							</div>
-						</td>  
-					
-					</tr> 
-     							
-     			";       		
-     			/ *
-     			
-     			
-     	     	<tr class='search_merch_row'> 
-					<td class='search_box_dba'>
-						<div>&nbsp;&nbsp; <span class='mrr_search_cid'>LEGAL NAME</span> 
-							<span class='mrr_link_simulator_merch' id='merch_".$row['id']."_legal_name' onMouseOver='mrr_search_highlighter(".$row['id'].",1);' onMouseOut='mrr_search_highlighter(".$row['id'].",0);'  onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['id'].",0);' title='".str_replace("'","",trim($row['merchant']))."'>
-								".trim($row['merchant'])."
-							</span>
-						</div>
-					</td> 
-					<td class='search_box_uid'><div>&nbsp;</div></td> 					
-					<td class='search_box_addr' align='right'>
-						<div><span class='mrr_search_cid'>CID#</span> 
-							<span class='mrr_link_simulator_merch' id='merch_".$row['id']."_cid_number' onMouseOver='mrr_search_highlighter(".$row['id'].",1);' onMouseOut='mrr_search_highlighter(".$row['id'].",0);' onclick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$row['id'].",0);' title='".$row['id']."'>
-								".$row['id']."
-							</span>
-						</div>
-					</td> 
-					<td class='search_box_city'><div>&nbsp;</div></td> 
-					<td class='search_box_state'><div>&nbsp;</div></td> 
-				</tr> 
-     			* /	
-     			
-     			$cntr++;	      			
-     			
-     			//now get any merchants connected to this one....
-	     		//if($_SESSION['access_level'] >=70)		$tab.=mrr_cascade_merchant_locs_search($row['id'],$edit_mode1,"",$reload_flag,$show_archived); 	
-			}					     	
-	     }
-	     */
-	     	     	     
+	     //$tab.="<tr><td colspan='5'>Query=".$sql."</td></tr>";    	     	     
     		$tab.="
 			</tbody>
 		</table>
@@ -4616,7 +4297,11 @@
 	     	$search_filer .= " and 
 	     					(users.username like '%".sql_friendly($_POST['user_search_filter'])."%'
 	     					or users.first_name like '%".sql_friendly($_POST['user_search_filter'])."%'
-	     					or users.last_name like '%".sql_friendly($_POST['user_search_filter'])."%')
+	     					or users.last_name like '%".sql_friendly($_POST['user_search_filter'])."%'
+	     					
+	     					or CONCAT(users.first_name,' ',users.last_name) like '%".sql_friendly($_POST['user_search_filter'])."%'
+	     						     					
+	     					or users.email like '%".sql_friendly($_POST['user_search_filter'])."%')
 	     	";
 	     }
 	     
@@ -5021,7 +4706,7 @@
      	$tab2=create_uploader_section('user_image_holder',"Photo&nbsp&nbsp;",SECTION_AVATAR,$row['id']);
      	
      	echo $tab2;
-     	
+     	   	
      	$tab3=create_uploader_section('cert_image_holder',"Certificate &nbsp&nbsp;",SECTION_CERTIFICATES,$row['id'],'show_user_cert', 'Upload Certificate');
      	
      	echo $tab3;
@@ -5690,19 +5375,20 @@
      	}
      	     	     		
 		$sql = "
-			select *
+			select *,
+				(select count(*) from template_items t2 where t2.deleted=0 and t2.archived=0 and t2.sub_group_id= template_items.id) as sub_cntr
 			
 			from template_items
-			where deleted = 0
-				and sub_group_id = 0					
+			where template_items.deleted = 0
+				and template_items.sub_group_id = 0					
 				".$mrr_adder."
-			order by zorder asc,archived asc,item_label asc, id asc
+			order by template_items.zorder asc,template_items.archived asc,template_items.item_label asc, id asc
 		";
 		$data = simple_query($sql);
 		$cntr=0;	
 		while($row = mysqli_fetch_array($data)) 
 		{
-			$files=get_all_files_for_template_item($row['id'],0,0,$show_auditor_control,0,0,0);
+			$files=get_all_files_for_template_item($row['id'],0,0,$show_auditor_control,0,1,0);
 			
 			$subtab="";	
 			$show_header=0;	
@@ -5722,7 +5408,7 @@
           	$data2=simple_query($sql2);
           	while($row2=mysqli_fetch_array($data2)) 
           	{
-     			$files2=get_all_files_for_template_item($row2['id'],0,0,$show_auditor_control,$show_header,0,1);
+     			$files2=get_all_files_for_template_item($row2['id'],0,0,$show_auditor_control,$show_header,1,1);
      			if($files2!="")
      			{
      				
@@ -5733,6 +5419,8 @@
      				$show_header=1;
      			}		
           	}
+          	
+          	if($row['sub_cntr'] > 0)		$files="";
           	
           	if($subtab=="" && $files=="")	
           	{
@@ -5762,21 +5450,26 @@
 		//find merchant files
      	if($_SESSION['merchant_id'] == 0 && $_SESSION['selected_merchant_id'] > 0)
      	{
-     		$mrr_adder.=" and merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."'";
+     		$mrr_adder.=" and (attached_files.merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."'";
+     		if($_SESSION['access_level'] >=70)
+     		{
+     			$mrr_adder.=" or (merchants.parent_company_id='".sql_friendly($_SESSION['selected_merchant_id'])."' and merchants.parent_company_id>0) ";	
+     		}     
+     		$mrr_adder.=")";	
      	}
      	elseif($_SESSION['merchant_id'] > 0)
      	{
-     		$mrr_adder.=" and merchant_id='".sql_friendly($_SESSION['merchant_id'])."'";
+     		$mrr_adder.=" and attached_files.merchant_id='".sql_friendly($_SESSION['merchant_id'])."'";
      	}
      	
      	//find store fies
      	if($_SESSION['store_id'] == 0 && $_SESSION['selected_store_id'] > 0)
      	{
-     		//$mrr_adder.=" and (store_id='".sql_friendly($_SESSION['selected_store_id'])."' or store_id=0)";	//
+     		$mrr_adder.=" and (attached_files.store_id='".sql_friendly($_SESSION['selected_store_id'])."' or attached_files.store_id=0)";	//
      	}     	
      	elseif($_SESSION['store_id'] > 0)
      	{
-     		//$mrr_adder.=" and (store_id='".sql_friendly($_SESSION['store_id'])."' or store_id=0)";			//
+     		$mrr_adder.=" and (attached_files.store_id='".sql_friendly($_SESSION['store_id'])."' or attached_files.store_id=0)";			//
      	}
 				
 		$show_auditor_control2=$show_auditor_control;
@@ -5784,15 +5477,15 @@
 		if($_SESSION['access_level'] >= 60)	$show_auditor_control=1;
 		
 		
-		$list.="<table class='tablesorterx' width='100%'>";		
+		$list.="<table class='tablesorterx' width='100%' style='font-size:12px;'>";		
 		if($drop_header==0)
 		{
 			$list.="
 				<thead>
 				<tr>					
-					".($show_uploaded > 0 ? "<th valign='top' width='90' nowrap>Upload Date</th>" : "")."
-					<th valign='top'>Document Name</th>
-					<th valign='top' width='90' nowrap>Document Date</th>
+					".($show_uploaded > 0 ? "<th valign='top' width='90' nowrap><span style='color:#000000;'>Upload Date</span></th>" : "")."
+					<th valign='top'><span style='color:#000000;'>Document Name</span></th>
+					<th valign='top' width='90' nowrap><span style='color:#000000;'>Document Date</span></th>
 					".($show_auditor_control > 0 ? "<th valign='top' width='70'>&nbsp;</th>" : "")."
 					".($show_auditor_control2 > 0 ? "<th valign='top' width='50'>&nbsp;</th>" : "")."
 				</tr>
@@ -5804,24 +5497,39 @@
 		$cntr=0;		
 		
 		$sql="
-          	select *
+          	select attached_files.*
              	from attached_files
-             	where deleted=0
-             		and (template_item_id= '".sql_friendly($template_item_id)."' or template_item_id_sub= '".sql_friendly($template_item_id)."')               		 
+             		left join merchants on merchants.id=attached_files.merchant_id and merchants.deleted=0
+             	where attached_files.deleted=0
+             		and (attached_files.template_item_id= '".sql_friendly($template_item_id)."' or attached_files.template_item_id_sub= '".sql_friendly($template_item_id)."')               		 
              		".$mrr_adder."
-             		and linedate_display_start <= NOW()
-             	order by public_name asc,id asc
+             		and attached_files.linedate_display_start <= NOW()
+             	order by attached_files.public_name asc,attached_files.id asc
           ";
           $data = simple_query($sql);          
           while($row = mysqli_fetch_array($data))
           {
-          	$name=$row['filename'];
-          	if(trim($row['public_name'])!="")		$name=$row['public_name'];
+          	$name=trim($row['filename']);
+          	if(trim($row['public_name'])!="")		$name=trim($row['public_name']);
           	
           	$allow_editor1="<i class='fa fa-pencil' style='color:#e19918; cursor:pointer;' title='Click to edit this document' onClick='mrr_file_renamer(".$row['id'].",".$file_namer_remover.");'></i>";
 			$allow_editor2="<i class='fa fa-trash' style='color:#e19918; cursor:pointer;' title='Click to remove this document' onClick='delete_attachment(".$row['id'].");'></i>";
 			//$allow_editor3="<i class='fa fa-chevron-circle-down' style='color:#e19918; cursor:pointer;' title='Click to check it off (archive).' onClick=''></i>";	
+          	          	
+          	if(strlen($name) > 10)
+          	{
+          		$temp_name=$name;
+          		$temp_name=str_replace("_","_ ",$temp_name);
+          		$temp_name=str_replace("-","- ",$temp_name);
+          		$temp_name=str_replace("+","+ ",$temp_name);
+          		$temp_name=str_replace(".",". ",$temp_name);
+          		     
+          		$namer="<span title='".$name."'>".trim($temp_name)."</span>";		// class='filename_holder_mrr'
+          		$name=$namer;
+          	}
           	
+          	//$namer="<span title='".$name."'>".$name."</span>";	// class='filename_holder_mrr'
+          	//$name=$namer;
           	
           	if($_SESSION['access_level'] < 40 || $_SESSION['access_level']==50 || $_SESSION['access_level']==45)
           	{	//cannot edit any files (or remove them).
@@ -5844,13 +5552,13 @@
                		//".($cntr%2==0 ? "even" : "odd" )."           ".($cntr > 0 ? " file_display_line" : "")."
                		$list.="
                			<tr class='".$class_adder."' id='attachment_row_".$row['id']."'>          				
-               				".($show_uploaded > 0 ? "<td width='90'>".date("M d, Y",strtotime($row['linedate_added']))."</td>" : "")."
+               				".($show_uploaded > 0 ? "<td width='90'><span style='color:#000000;'>".date("M d, Y",strtotime($row['linedate_added']))."</span></td>" : "")."
                				<td>
                          			<a href='documents/".$row['filename']."' target='_blank' onClick='set_email_view_log(".$row['id'].");' title='View this document...'>
                          				<div class='template_item_file_name'>".$name."</div>
                          			</a>		
                				</td>
-               				<td width='90'>".date("M d, Y",strtotime($row['linedate_display_start']))."</td>  
+               				<td width='90'><span style='color:#000000;'>".date("M d, Y",strtotime($row['linedate_display_start']))."</span></td>  
                				".($show_auditor_control > 0  ? "<td width='70' nowrap>".$allow_editor1." &nbsp; &nbsp; &nbsp; &nbsp; ".$allow_editor2."</td>" : "")."
                				".($show_auditor_control2 > 0  ? "<td valign='top' width='50'><img src='common/images/next_orange.png' alt='' border='0' onClick='update_auditor2_list(".$row['id'].",1);' style='cursor:pointer;;height:16px'></td>" : "")."
                			</tr>          		
@@ -5872,13 +5580,13 @@
                		//".($cntr%2==0 ? "even" : "odd" )."        ".($cntr > 0 ? " file_display_line" : "")."
                		$list.="
                			<tr class='".$class_adder."' id='attachment_row_".$row['id']."'>          				
-               				".($show_uploaded > 0 ? "<td valign='top' width='90'>".date("M d, Y",strtotime($row['linedate_added']))."</td>" : "")."
+               				".($show_uploaded > 0 ? "<td valign='top' width='90'><span style='color:#000000;'>".date("M d, Y",strtotime($row['linedate_added']))."</span></td>" : "")."
                				<td valign='top'>
                          			<span class='mrr_link_simulator' onclick='set_email_view_log(".$row['id']."); view_attached_file(".$row['section_id'].",".$row['xref_id'].",".$row['id'].");' title='View this document...'>
                          				<div class='template_item_file_name'>".$name."</div>
                          			</span>	
                				</td>
-               				<td valign='top' width='90'>".date("M d, Y",strtotime($row['linedate_display_start']))."</td> 
+               				<td valign='top' width='90'><span style='color:#000000;'>".date("M d, Y",strtotime($row['linedate_display_start']))."</span></td> 
                				".($show_auditor_control > 0  ? "<td valign='top' width='70' nowrap>".$allow_editor1." &nbsp; &nbsp; &nbsp; &nbsp; ".$allow_editor2."</td>" : "")."
                				".($show_auditor_control2 > 0  ? "<td valign='top' width='50'>$use_icon</td>" : "")."
                			</tr>
@@ -6745,10 +6453,19 @@
 		<table>
 			<tr>
 				".($label != '' ? "<td valign='top' align='left' width='150'><b>".$label."</b></td>" : "")."
-				<td valign='top' align='left'>					
-					
-					<div style='float:left;margin-right:20px'>	
+				<td valign='top' align='left'>		
 		";
+		if($field_name=="user_image_holder")
+		{
+			echo "
+					<div style='float:right; text-align:right'>
+               			<input type='button' name='clear_user_logo' id='clear_user_logo' value='Clear Photo' class='btn btn-default add_new_btn' onClick='mrr_clear_cust_store_logo(0,0,1);'>
+               		</div>
+			";	
+		}			
+		echo "
+					<div style='float:left;margin-right:20px'>	
+		";			
 					$upload_section = new upload_section();
 					$upload_section->section_id = $section;
 					$upload_section->xref_id = $xref_id;
@@ -6759,8 +6476,13 @@
 						
 		echo "
 					</div>
-					<div style='clear:both'></div>
+					<div style='clear:both'></div>					
+					
+		";	
+		
+		echo "		
 					<div style='float:left' id='".$field_name."'".$img_class."></div>
+					<div style='clear:both'></div>
 				</td>	
 			</tr>
 		</table>		
@@ -7072,22 +6794,53 @@
      	return $sub_group_id;
      }
      
-     function show_selected_route_info()
+     function show_selected_route_info($merchant=0,$store=0,$user=0,$override=0)
      {	//this function is meant to display breadcrumb trail for user to see who/what is being viewed.
      	$display="";
      	
      	$reload_flag=0;
      	//$reload_flag=1;
      	
-     	$user=$_SESSION['selected_user_id'];
-     	$merchant=$_SESSION['selected_merchant_id'];
-     	$store=$_SESSION['selected_store_id'];
-     		
+     	if($override==0)
+     	{	//use current session if not overriding by function default settings...which should be the same.
+     		$user=$_SESSION['selected_user_id'];
+     		$merchant=$_SESSION['selected_merchant_id'];
+     		$store=$_SESSION['selected_store_id'];
+     	}
+     	
+     	if($_SESSION['access_level'] == 70)
+     	{	//group manager...
+     		$user=0;
+     		if($merchant==0)	
+     		{
+     			$merchant=$_SESSION['selected_merchant_id'];
+     		}
+     	}
+     	if($_SESSION['access_level'] == 60 || $_SESSION['access_level'] == 61)
+     	{	//compliance officer (or compliance team)
+     		$user=0;
+     		if($merchant==0)	
+     		{
+     			$merchant=$_SESSION['selected_merchant_id'];
+     			if($merchant==0)		$merchant=$_SESSION['merchant_id'];
+     		}
+     		if($store==0)	
+     		{
+     			$store=$_SESSION['selected_store_id'];
+     			//if($store==0)			$store=$_SESSION['store_id'];
+     		}
+     	}
+     	
+     	
+     	if(isset($_SESSION['special_merchant_id']))		$merchant=$_SESSION['special_merchant_id'];
+     	
 		if($user==0 && $merchant ==0 && $store==0)			return $display;
 		
 		$display.="<div class='breadcrumb_trail'>";			
 		
 		$display.="<span class='mrr_link_simulator buttonize btn btn-default add_new_btn' onClick='debread_crumb_trail(0);'>Clear All</span>";	
+		
+		$mrr_sql="";
 		
 		if($merchant > 0)
 		{
@@ -7096,12 +6849,17 @@
      			from merchants
      			where id='".sql_friendly($merchant)."'
      		";
+     		$mrr_sql=$sql;
      		$data = simple_query($sql);
      		while($row = mysqli_fetch_array($data))	
      		{	
      			$display.=" <span class='mrr_link_simulator buttonize btn btn-default add_new_btn' onClick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$merchant.",0);'><span id='bct_merchant_id' style='display:none;'>".$merchant."</span>".trim($row['merchant'])."</span>";	
      			//$display.=" <span class='mrr_link_simulator buttonize btn btn-default add_new_btn' onClick='debread_crumb_trail(1);'><span id='bct_merchant_id' style='display:none;'>".$merchant."</span>".trim($row['merchant'])."</span>";	
      		}			
+		}
+		else
+		{
+			$display.="<span id='bct_merchant_id' style='display:none;'>0</span>";
 		}
 		
 		if($store > 0)
@@ -7111,12 +6869,17 @@
      			from store_locations
      			where id='".sql_friendly($store)."'
      		";
+     		//$mrr_sql=$sql;
      		$data = simple_query($sql);
      		while($row = mysqli_fetch_array($data))	
      		{
      			$display.="  <span class='mrr_link_simulator buttonize btn btn-default add_new_btn' onClick='pick_selected_item".($reload_flag > 0  ? "_v2" : "")."(0,".$merchant.",".$store.");'><span id='bct_store_id' style='display:none;'>".$store."</span>".trim($row['store_name'])." UID: ".trim($row['store_number'])."</span>";	
      			//$display.="  <span class='mrr_link_simulator buttonize btn btn-default add_new_btn' onClick='debread_crumb_trail(2);'><span id='bct_store_id' style='display:none;'>".$store."</span>".trim($row['store_name'])." UID: ".trim($row['store_number'])."</span>";	
      		}			
+		}
+		else
+		{
+			$display.="<span id='bct_store_id' style='display:none;'>0</span>";
 		}
 		
 		if($user > 0)
@@ -7126,6 +6889,7 @@
      			from users
      			where id='".sql_friendly($user)."'
      		";
+     		//$mrr_sql=$sql;
      		$data = simple_query($sql);
      		while($row = mysqli_fetch_array($data))	
      		{
@@ -7133,8 +6897,12 @@
      			//$display.=" <span class='mrr_link_simulator buttonize btn btn-default add_new_btn' onClick='debread_crumb_trail(3);'><span id='bct_user_id' style='display:none;'>".$user."</span>".trim($row['first_name'])." ".trim($row['last_name'])."</span>";	
      		}			
 		}	
+		else
+		{
+			$display.="<span id='bct_user_id' style='display:none;'>0</span>";
+		}
 			
-		$display.="</div>";			
+		$display.="</div>";		//	<div>".$mrr_sql."</div>		
      	
      	return $display;
      }
@@ -7143,9 +6911,31 @@
      {
      	$tab="";
      	
+     	if(isset($_SESSION['special_merchant_id']))		$_SESSION['selected_merchant_id']=$_SESSION['special_merchant_id'];
+     	
+     	$starting=$_SESSION['selected_merchant_id'];
+     	
+     	if($_SESSION['access_level'] == 70 && $_SESSION['selected_merchant_id']==0)
+     	{	//no merchnat selected...user should at least have the group selected.
+     		$sql="
+               	select merchant_id,store_id
+                  	from users
+                  	where id='".sql_friendly($_SESSION['user_id'])."'
+               ";
+               $data = simple_query($sql);          
+               if($row = mysqli_fetch_array($data))
+               {
+               	$_SESSION['selected_merchant_id']=$row['merchant_id'];
+               	$_SESSION['selected_store_id']=$row['store_id'];
+               	//$_SESSION['selected_store_id']=$_SESSION['store_id'];
+     			//$_SESSION['store_id']=0;
+               }
+     	}
+     	    	
      	$all_files=get_all_template_items_for_template($id,0,0,1);		//files that can be used...
      	$viewable=display_auditor2_files(1);						//only the sleected files that can be seen by Auditor2
      	
+     	// ".$starting.".
      	$tab.="
      		<table cellpadding='0' cellspacing='0' border='0' width='100%'>
      		<tr>
@@ -7179,72 +6969,112 @@
      {
      	$tab="";
      	
-     	$mrr_adder="";
+     	if(isset($_SESSION['special_merchant_id']))		$_SESSION['selected_merchant_id']=$_SESSION['special_merchant_id'];
+     	
+     	$starting=$_SESSION['selected_merchant_id'];
+     	
+     	$mrr_adder="";     	
+     	
+     	if($_SESSION['access_level'] == 70 && $_SESSION['selected_merchant_id']==0)
+     	{	//no merchnat selected...user should at least have the group selected.
+     		$sql="
+               	select merchant_id,store_id
+                  	from users
+                  	where id='".sql_friendly($_SESSION['user_id'])."'
+               ";
+               $data = simple_query($sql);          
+               if($row = mysqli_fetch_array($data))
+               {
+               	$_SESSION['selected_merchant_id']=$row['merchant_id'];
+               	$_SESSION['selected_store_id']=$row['store_id'];
+               	//$_SESSION['selected_store_id']=$_SESSION['store_id'];
+     			//$_SESSION['store_id']=0;
+               }
+     	}     	
 		
 		//find merchant template first...acts as a default.
      	if($_SESSION['merchant_id'] == 0 && $_SESSION['selected_merchant_id'] > 0)
      	{
-     		$mrr_adder.=" and merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."'";
+     		$mrr_adder.=" and (attached_files.merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."'";
+     		if($_SESSION['access_level'] >=70)
+     		{
+     			//$mrr_adder.=" or (merchants.parent_company_id='".sql_friendly($_SESSION['selected_merchant_id'])."' and merchants.parent_company_id>0)";	
+     		}     
+     		$mrr_adder.=")";		
      	}
      	elseif($_SESSION['merchant_id'] > 0)
      	{
-     		$mrr_adder.=" and merchant_id='".sql_friendly($_SESSION['merchant_id'])."'";
+     		$mrr_adder.=" and attached_files.merchant_id='".sql_friendly($_SESSION['merchant_id'])."'";
      	}
      	
      	//find store template next...override merchant if set.
      	if($_SESSION['store_id'] == 0 && $_SESSION['selected_store_id'] > 0)
      	{
-     		$mrr_adder.=" and (store_id='".sql_friendly($_SESSION['selected_store_id'])."' or store_id=0)";
+     		$mrr_adder.=" and (attached_files.store_id='".sql_friendly($_SESSION['selected_store_id'])."' or attached_files.store_id=0)";
      	}     	
      	elseif($_SESSION['store_id'] > 0)
      	{
-     		$mrr_adder.=" and (store_id='".sql_friendly($_SESSION['store_id'])."' or store_id=0)";
+     		$mrr_adder.=" and (attached_files.store_id='".sql_friendly($_SESSION['store_id'])."' or attached_files.store_id=0)";
      	}
      	
      	$mrr_wide=250;				
      	if($show_auditor_control > 0 )		$mrr_wide=200;			// width='".$mrr_wide."'
      	
-     	$tab.="<table class='tablesorterx' width='100%'>
+     	$tab.="<table class='tablesorterx' width='100%' style='font-size:12px;'>
 				<thead>
 				<tr>
-					<th valign='top' width='100' nowrap>Upload Date</th>
+					<th valign='top' width='90' nowrap>Upload Date</th>
 					<th valign='top'>Document Name</th>
-					<th valign='top' width='100' nowrap>Document Date</th>
+					<th valign='top' width='90' nowrap>Document Date</th>
 					".($show_auditor_control > 0  ? "<th valign='top' width='50'>&nbsp;</th>" : "")."
 				</tr>
 				</thead>
 				<tbody>
 		";		//
-     	   	
+     	  	
      	$cntr=0;			
 		$sql="
-          	select *
+          	select attached_files.*
              	from attached_files
-             	where deleted=0
-             		and auditor2_viewable > 0               		 
+             		
+             	where attached_files.deleted=0
+             		and attached_files.auditor2_viewable > 0               		 
              		".$mrr_adder."
-             		and linedate_display_start <= NOW()
-             	order by public_name asc,id asc
-          ";
+             		and attached_files.linedate_display_start <= NOW()
+             	order by attached_files.public_name asc,attached_files.id asc
+          ";		//left join merchants on merchants.id=attached_files.merchant_id and merchants.deleted=0
           $data = simple_query($sql);          
           while($row = mysqli_fetch_array($data))
           {
-          	$name=$row['filename'];
-          	if(trim($row['public_name'])!="")	$name=$row['public_name'];
+          	$name=trim($row['filename']);
+          	if(trim($row['public_name'])!="")	$name=trim($row['public_name']);
           	
+          	if(strlen($name) > 10)
+          	{
+          		$temp_name=$name;
+          		$temp_name=str_replace("_","_ ",$temp_name);
+          		$temp_name=str_replace("-","- ",$temp_name);
+          		$temp_name=str_replace("+","+ ",$temp_name);
+          		$temp_name=str_replace(".",". ",$temp_name);
+          		     
+          		$namer="<span title='".$name."'>".trim($temp_name)."</span>";		// class='filename_holder_mrr'
+          		$name=$namer;
+          	}
           	
+          	//$namer="<span title='".$name."'>".$name."</span>";	// class='filename_holder_mrr'
+          	//$name=$namer;
           	
           	if($row['public_flag'] > 0)   
           	{   	
           		$tab.="
           			<tr class='".($cntr%2==0 ? "even" : "odd" )."'>
-          				<td valign='top'>".date("m/d/Y",strtotime($row['linedate_added']))."</td>
+          				<td valign='top'><span class='mrr_aud_font_size'>".date("M d, Y",strtotime($row['linedate_added']))."</span></td>
           				<td valign='top'>
                     			<a href='documents/".$row['filename']."' target='_blank' onClick='set_email_view_log(".$row['id'].");' title='View this document...' class='".($show_auditor_control ? "auditor_download" : "")."' attachment_id='$row[id]'>
-                    				<div class='template_item_file_name'>".$name."</div>
+                    				<div class='template_item_file_name2'>".$name."</div>
                     			</a>		
           				</td>
-          				<td valign='top'>".date("m/d/Y",strtotime($row['linedate_display_start']))."</td>    
+          				<td valign='top'><span class='mrr_aud_font_size'>".date("M d, Y",strtotime($row['linedate_display_start']))."</span></td>    
           				".($show_auditor_control > 0  ? "<td valign='top'><img src='common/images/prev_orange.png' alt='' border='0' onClick='update_auditor2_list(".$row['id'].",0);' style='cursor:pointer;height:16px'></td>" : "")."     				
           			</tr>          		
           			";
@@ -7253,13 +7083,13 @@
           	{
           		$tab.="
           			<tr class='".($cntr%2==0 ? "even" : "odd" )."'>
-          				<td valign='top'>".date("m/d/Y",strtotime($row['linedate_added']))."</td>
+          				<td valign='top'><span class='mrr_aud_font_size'>".date("M d, Y",strtotime($row['linedate_added']))."</span></td>
           				<td valign='top'>
                     			<span class='mrr_link_simulator ".($show_auditor_control ? "auditor_download" : "")."' attachment_id='$row[id]' onclick='set_email_view_log(".$row['id']."); view_attached_file(".$row['section_id'].",".$row['xref_id'].",".$row['id'].");' title='View this document...'>
-                    				<div class='template_item_file_name'>".$name."</div>
+                    				<div class='template_item_file_name2'>".$name."</div>
                     			</span>	
           				</td>
-          				<td valign='top'>".date("m/d/Y",strtotime($row['linedate_display_start']))."</td>  
+          				<td valign='top'><span class='mrr_aud_font_size'>".date("M d, Y",strtotime($row['linedate_display_start']))."</span></td>  
           				".($show_auditor_control > 0  ? "<td valign='top'><img src='common/images/prev_orange.png' alt='' border='0' onClick='update_auditor2_list(".$row['id'].",0);' style='cursor:pointer;;height:16px'></td>" : "")."
           			</tr>
           			";
@@ -7271,12 +7101,12 @@
           {	//user is Auditor 2 and might need to download all files...
           	$tab.="
 				<tr>
-          				<td valign='top' colspan='3' align='center'>
-          					<br>
-          					<span class='buttonize btn btn-default add_new_btn' onClick='mrr_download_all_docs(1);'>Download All Files</span>
-          					<br>
-          					<br>
-          				</td>  
+     				<td valign='top' colspan='3' align='center'>
+     					<br>
+     					<span class='buttonize btn btn-default add_new_btn' onClick='mrr_download_all_docs(1);'>Download All Files</span>
+     					<br>
+     					<br>
+     				</td>  
           		</tr>
 			";	
           }
@@ -7435,10 +7265,10 @@
   			{
   				$tab.="  			
        			<div class='portlet default_closed cust_info'>
-       				<div class='non_file_cabinet_hdr'>	
+       				
           				<div class='portlet-header'>COMPLIANCE MANAGER</div>
-          			</div>	
-          			<div class='non_file_cabinet_bdy'>
+          				
+          			
           				<div class='portlet-content'>
                				<table style='width:100%;'>			
                					<tr>
@@ -7461,8 +7291,7 @@
                					</tr>          								
                				</table>				
                			</div>  
-          				<div class='clearfix'></div>
-          			</div>       			
+               			    			
           		</div>		
        			";
   			}

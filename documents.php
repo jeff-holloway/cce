@@ -77,10 +77,10 @@ else
 	{
 		$namer="".$row['item_label']."";	
 		
-		$files=get_all_files_for_template_item($row['id'],0,0,0,0,0,0);
+		$files=get_all_files_for_template_item($row['id'],0,0,0,0,1,0);
 		$subs="";
 		$show_header=0;
-		if($files!="")		$show_header=1;
+		if($files!="")		$show_header=0;
 		
 		
 		//get the files for this item
@@ -100,8 +100,8 @@ else
      		$namer2="".$row2['item_label']."";	
      		
      		//get files for this sub_item
-     		$show_uploaded=0;
-     		if(trim($namer) == "Financial Institution")		$show_uploaded=1;
+     		$show_uploaded=1;
+     		//if(trim($namer) == "Financial Institution")		$show_uploaded=0;
      		
      		$files2=get_all_files_for_template_item($row2['id'],0,0,0,$show_header,$show_uploaded,0);
      		if($files2!="")
@@ -377,8 +377,8 @@ else
 </div>
 
 <!--Form for New Document Name -->
-<div id="dialog-form_file_rename" title="Rename Document" style='display:none; width:500px;'>
-	<p class="validateTips">Give this file a New Document Name</p>
+<div id="dialog-form_file_rename" title="Edit Document" style='display:none; width:500px;'>
+	<p class="validateTips">Edit Settings for this Document</p>
 	<div class='field'>
 		<label for="email">Old Name</label>
 		<span><br><span id='old_doc_file_name'></span></span>
@@ -421,7 +421,7 @@ else
 	</div>
 	
 	<div class='field'>
-		<label for="user_name">New Display Date</label>
+		<label for="user_name">New Document Date</label>
 		<span>
 			<input type="text" name="document_date_rename" id="document_date_rename" value="" class='linedate' style='width:100px;'>
 			<!-- Allow form submission with keyboard without duplicating the dialog button -->
@@ -435,39 +435,34 @@ else
 <?	// mrr_cust_info
 	if(trim($namer) == "Financial Institution")
 	{
-		echo "
+		echo "			
+                 	<div class='portlet mrr_aud_file_wrapper_marker auditor_file_cabinetx' id='portlet_doc_correspondence' style='border:0px; padding:0px; margin:0px;'>
+                   		<div class='portlet-header' style='margin-bottom:8px; border:0px;'>CORRESPONDENCE</div>
+                   		<div class='portlet-content portlet-content-mrr' style='border:0px 1px 1px 1px;'>".$list3."</div>
+                 	</div>                  
 			
-                 	<div class='portlet mrr_aud_file_wrapper_marker' id='portlet_doc_correspondence'>
-                   		<div class='portlet-header'>CORRESPONDENCE</div>
-                   		<div class='portlet-content portlet-content-mrr'>".$list3."</div>
+                 	<div class='portlet mrr_aud_file_wrapper_marker auditor_file_cabinetx' id='portlet_doc_account_applications' style='border:0px; padding:0px; margin:0px;'>
+                   		<div class='portlet-header' style='margin-bottom:8px; border:0px;'>ACCOUNT APPLICATIONS</div>
+                   		<div class='portlet-content portlet-content-mrr' style='border:0px 1px 1px 1px;'>".$list1."</div>
                  	</div>     
-               
-			
-                 	<div class='portlet mrr_aud_file_wrapper_marker' id='portlet_doc_account_applications'>
-                   		<div class='portlet-header'>ACCOUNT APPLICATIONS</div>
-                   		<div class='portlet-content portlet-content-mrr'>".$list1."</div>
+                 	<div class='portlet mrr_aud_file_wrapper_marker auditor_file_cabinetx' id='portlet_doc_current_bank_statement' style='border:0px; padding:0px; margin:0px;'>
+                   		<div class='portlet-header' style='margin-bottom:8px; border:0px;'>CURRENT BANK STATEMENTS</div>
+                   		<div class='portlet-content portlet-content-mrr' style='border:0px 1px 1px 1px;'>".$list2."</div>
                  	</div>     
-                 	<div class='portlet mrr_aud_file_wrapper_marker' id='portlet_doc_current_bank_statement'>
-                   		<div class='portlet-header'>CURRENT BANK STATEMENTS</div>
-                   		<div class='portlet-content portlet-content-mrr'>".$list2."</div>
-                 	</div>     
-                 	<div class='portlet mrr_aud_file_wrapper_marker' id='portlet_doc_previous_bank_statements'>
-                   		<div class='portlet-header'>PREVIOUS BANK STATEMENTS</div>
-                   		<div class='portlet-content portlet-content-mrr'>".$list4."</div>
-                 	</div>     
-
+                 	<div class='portlet mrr_aud_file_wrapper_marker auditor_file_cabinetx' id='portlet_doc_previous_bank_statements' style='border:0px; padding:0px; margin:0px;'>
+                   		<div class='portlet-header' style='margin-bottom:8px; border:0px;'>PREVIOUS BANK STATEMENTS</div>
+                   		<div class='portlet-content portlet-content-mrr' style='border:0px 1px 1px 1px;'>".$list4."</div>
+                 	</div>   
           ";
 	}
 	else
 	{
      	echo "
-          	<div class='mrr_aud_file_wrapper'>
-                 	<div class='auditor_file_cabinet portlet' id='portlet_doc_compliance_officer_2'>
-                   		<div class='portlet-header'>".( (trim($namer) == "Compliance Officer" || trim($namer) == "Compliance Manager" || trim($namer)=="Training Center") ? "All" : trim($namer))." Documents</div>
-                   		<div class='portlet-content'>".$list."</div>
-                 	</div>     
-               </div>     
-               <div class='clear'></div>
+     			<div class='portlet mrr_aud_file_wrapper_marker auditor_file_cabinetx' id='portlet_doc_compliance_officer_2' style='border:0px; padding:0px; margin:0px;'>
+                   		<div class='portlet-header' style='margin-bottom:8px; border:0px;'>".( (trim($namer) == "Compliance Officer" || trim($namer) == "Compliance Manager" || trim($namer)=="Training Center") ? "All" : trim($namer))." Documents</div>
+                   		<div class='portlet-content portlet-content-mrr' style='border:0px 1px 1px 1px;'>".$list."</div>
+                 	</div>      
+               	<div class='clear'></div>
      	";		//<div style='padding:5px; margin:5px; border:1px solid #ebebeb; border-top:0; margin-right:5px; padding-right:5px;'></div>
 	}
 }

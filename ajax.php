@@ -125,6 +125,16 @@ if(!isset($_SESSION['user_id']))
 			mrr_update_cce_message();
 			break;
 			
+		case 'mrr_reload_quick_links':
+			mrr_reload_quick_links();
+			break;
+		case 'mrr_update_quick_links':
+			mrr_update_quick_links();
+			break;
+		case 'mrr_update_quick_links_new':
+			mrr_update_quick_links_new();
+			break;
+			
 		case 'get_financial_inst_details':
 			get_financial_inst_details();
 			break;
@@ -309,6 +319,10 @@ if(!isset($_SESSION['user_id']))
 			break;
 		case 'save_sortable':
 			save_sortable();
+			break;
+		
+		case 'remove_logo_list':
+			remove_logo_list();
 			break;
 			
 		case 'mrr_heart_beat':
@@ -614,8 +628,32 @@ if(!isset($_SESSION['user_id']))
 		if(isset($_POST['date']))		$adder.="linedate_display_start='".date("Y-m-d",strtotime($_POST['date']))."',";
 		if(isset($_POST['custid']))		$adder.="merchant_id='".sql_friendly($_POST['custid'])."',";
 		if(isset($_POST['storeid']))		$adder.="store_id='".sql_friendly($_POST['storeid'])."',";
-		if(isset($_POST['typeid']))		$adder.="template_item_id='".sql_friendly($_POST['typeid'])."',";
-		if(isset($_POST['subid']))		$adder.="template_item_id_sub='".sql_friendly($_POST['subid'])."',";
+				
+		if(isset($_POST['typeid']))	
+		{
+			$adder.="template_item_id='".sql_friendly($_POST['typeid'])."',";
+			
+			if(!isset($_POST['subid']))		$_POST['subid']=0;
+						
+     		if($_POST['subid']==0 && $_POST['typeid'] > 0)
+     		{	//if no subtype was picked, pick it for them (first sub-type in doc-type group).  If none, ignore.
+     			$sql="
+     				select id 
+     				from template_items
+     				where deleted=0
+     					and archived=0
+     					and sub_group_id='".sql_friendly($_POST['typeid'])."'
+     				order by zorder asc,item_label asc, id asc
+     			";	
+     			$data=simple_query($sql);
+     			if($row = mysqli_fetch_array($data)) 
+     			{
+     				$_POST['subid']=$row['id'];	//use the first one only.
+     			}
+     		}
+     		
+     		$adder.="template_item_id_sub='".sql_friendly($_POST['subid'])."',";
+		}
 		
 		$sql = "
 			update attached_files set
@@ -894,7 +932,7 @@ if(!isset($_SESSION['user_id']))
 		$tab.="</tbody>
 		</table>
 		<div id='dialog_delete_file' title='Remove this File?' style='display:none;'>
-          	<p><span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>This File will be permanently removed and cannot be recovered without reloading he file. Are you sure you want to delete it?</p>
+          	<p><span class='ui-icon ui-icon-alert' style='float:left; margin:0 7px 20px 0;'></span>This File will be permanently removed and cannot be recovered without reloading the file. Are you sure you want to delete it?</p>
           </div>
                    
 		</div>";		
@@ -918,7 +956,11 @@ if(!isset($_SESSION['user_id']))
 		$file_sub=$_POST['template_sub'];	
 		
 		$processed=0;
-		if($_POST['processed_flag'] > 0)		$processed=$_SESSION['user_id'];
+		if($_POST['processed_flag'] > 0)	
+		{
+			if($file_date=="")	{	$file_date="".date("m/d/Y")."";		$_POST['display_date']=$file_date;	}
+			$processed=$_SESSION['user_id'];
+		}
 		
 		if($file_date=="")	
 		{
@@ -930,6 +972,24 @@ if(!isset($_SESSION['user_id']))
 			$file_date="".date("Y-m-d", strtotime($_POST['display_date']))."";
 		}
 		
+		if($file_sub==0 && $file_template > 0)
+		{	//if no subtype was picked, pick it for them (first sub-type in doc-type group).  If none, ignore.
+			$sql="
+				select id 
+				from template_items
+				where deleted=0
+					and archived=0
+					and sub_group_id='".sql_friendly($file_template)."'
+				order by zorder asc,item_label asc, id asc
+			";	
+			$data=simple_query($sql);
+			if($row = mysqli_fetch_array($data)) 
+			{
+				$file_sub=$row['id'];	//use the first one only.
+			}
+		}
+		
+		
 		$sql="";
 		$res=0;
 		
@@ -937,7 +997,8 @@ if(!isset($_SESSION['user_id']))
 		{
 			$sql="
 				update attached_files set
-					processed_flag='".sql_friendly($processed)."'					
+					processed_flag='".sql_friendly($processed)."',
+					linedate_display_start='".sql_friendly($file_date)."'			
 				where id='".sql_friendly($id)."'
 			";	
 			simple_query($sql);
@@ -1527,8 +1588,10 @@ if(!isset($_SESSION['user_id']))
 	function load_cce_messages()
 	{
 		$tab=cce_system_messages($_SESSION['merchant_id'],$_SESSION['store_id']);	
+		//$tab2=mrr_display_quick_links_user();
+		//$tab3=mrr_display_quick_links_edit();
 		
-		display_xml_response("<rslt>1</rslt><mrrTab><![CDATA[".$tab."]]></mrrTab>");
+		display_xml_response("<rslt>1</rslt><mrrTab><![CDATA[".$tab."]]></mrrTab>");		//<mrrQuickLinks><![CDATA[".$tab2."]]></mrrQuickLinks><mrrEditLinks><![CDATA[".$tab3."]]></mrrEditLinks>
 	}
 	function mrr_update_cce_message()
 	{
@@ -1543,6 +1606,63 @@ if(!isset($_SESSION['user_id']))
 				update cce_messages set
 					subject='".sql_friendly(trim($sub))."',
 					message='".sql_friendly(trim($body))."'
+					
+				where id='".sql_friendly($id)."'
+			";	
+			simple_query($sql);
+			$res=1;	
+		}
+		
+		display_xml_response("<rslt>".$res."</rslt>");
+	}
+	
+	//quick links...
+	function mrr_reload_quick_links()
+	{
+		$tab2=mrr_display_quick_links_user();
+		$tab3=mrr_display_quick_links_edit();
+		
+		display_xml_response("<rslt>1</rslt><mrrQuickLinks><![CDATA[".$tab2."]]></mrrQuickLinks><mrrEditLinks><![CDATA[".$tab3."]]></mrrEditLinks>");
+	}
+	function mrr_update_quick_links_new()
+	{
+		$id=$_POST['id'];
+		$name=trim($_POST['name']);
+		$url=trim($_POST['url']);
+		$private=$_POST['private_link'];
+		$merchant=$_POST['merchant_id'];
+		$store=$_POST['store_id'];
+		$m_list=trim($_POST['m_list']);
+		$s_list=trim($_POST['s_list']);
+		$rownum=$_POST['row_num'];
+		$colnum=$_POST['col_num'];
+		$poser=$_POST['position_id'];
+		
+		if(trim($name)!="") 
+		{		
+			$res=mrr_update_quick_links_main($id,$name,$url,$private,$merchant,$store,$m_list,$s_list,$rownum,$colnum,$poser);	
+			display_xml_response("<rslt>".$res."</rslt>");
+		}
+		else
+		{
+			display_xml_response("<rslt>1</rslt>");
+		}
+	}
+	function mrr_update_quick_links()
+	{
+		$id=$_POST['id'];
+		$field=trim($_POST['field']);			//database column name
+		$value=trim($_POST['value']);			//any value it has...including integer values.
+		
+		$field=str_replace("'","",$field);
+		if(substr_count($value,"'") % 2 !=0)	$value="'".str_replace("'","",$value)."'";		//repackage value in string quotes...
+		
+		$res=0;
+		if($id > 0 && $field!="")
+		{
+			$sql="
+				update quick_links set
+					".$field."=".$value."
 					
 				where id='".sql_friendly($id)."'
 			";	
@@ -1721,10 +1841,13 @@ if(!isset($_SESSION['user_id']))
 	{
 		$merchant_id=0;
 		if($_SESSION['merchant_id'] == 0 && $_SESSION['selected_merchant_id'] > 0)
+		{
 			$merchant_id=$_SESSION['selected_merchant_id'];
+		}
 		elseif($_SESSION['merchant_id'] > 0)	
+		{
 			$merchant_id=$_SESSION['merchant_id'];
-		
+		}
 		$tab=mrr_get_merchant_program_title($merchant_id);
 		
 		display_xml_response("<rslt>1</rslt><mrrTab><![CDATA[".$tab."]]></mrrTab>");		
@@ -2871,9 +2994,14 @@ if(!isset($_SESSION['user_id']))
 			$rval.="<LevelName><![CDATA[".$row['user_level_name']."]]></LevelName>";
 			$rval.="<Logs><![CDATA[".$logs."]]></Logs>";
 			
+			
+			//allow group managers to pick another user...by skipping the assignment for them
 			$_SESSION['selected_user_id']=$id;
-         	 	$_SESSION['selected_merchant_id']=$row['merchant_id'];
-			$_SESSION['selected_store_id']=$row['store_id'];
+			if($row['access_level']==70)					$_SESSION['selected_user_id']=0;
+						
+			//attempt to set, but do not override if the selected item is different.
+         	 	if($_SESSION['selected_merchant_id']==0)		$_SESSION['selected_merchant_id']=$row['merchant_id'];
+			if($_SESSION['selected_store_id']==0)			$_SESSION['selected_store_id']=$row['store_id'];
 		}
 		
 		display_xml_response("<rslt>1</rslt>".$rval."");	
@@ -3274,14 +3402,27 @@ if(!isset($_SESSION['user_id']))
 		$_SESSION['selected_merchant_id']=$merchant_id;
 		$_SESSION['selected_store_id']=$store_id;
 		
-		display_xml_response("<rslt>1</rslt>");	
+		$_SESSION['special_merchant_id']=$merchant_id;
+		
+		$tab=show_selected_route_info($merchant_id,$store_id,$user_id,1);
+		
+		display_xml_response("<rslt>1</rslt><mrrTab><![CDATA[".$tab."]]></mrrTab>");	
 	}
 	
 	function update_bread_crumb_trail()
 	{
-		$tab=show_selected_route_info();
+		$merchant_id=$_SESSION['selected_merchant_id'];
+		$store_id=$_SESSION['selected_store_id'];
+		$user_id=$_SESSION['selected_user_id'];
 		
-		display_xml_response("<rslt>1</rslt><mrrTab><![CDATA[".$tab."]]></mrrTab>");		
+		$only=0;
+		if(isset($_POST['only']))		$only=1;
+		
+		$tab=show_selected_route_info($merchant_id,$store_id,$user_id,1);
+		
+		$display="Customer ".$merchant_id.", Store ".$store_id.", User ".$user_id."";
+		
+		display_xml_response("<rslt>1</rslt><mrrTab><![CDATA[".$tab."]]></mrrTab><mrrDisplay><![CDATA[".$display."]]></mrrDisplay>");		
 	}
 	function debread_crumb_trail()
 	{
@@ -3294,6 +3435,9 @@ if(!isset($_SESSION['user_id']))
 			$_SESSION['selected_store_id']=0;
 			$_SESSION['selected_user_id']=0;
 		}
+		
+		$_SESSION['special_merchant_id']=$_SESSION['selected_merchant_id'];
+		
 		display_xml_response("<rslt>1</rslt>");		
 	}
 	
@@ -3419,4 +3563,39 @@ if(!isset($_SESSION['user_id']))
 		
 		display_xml_response("<rslt>1</rslt>");
 	}
+	function remove_logo_list()
+	{
+		if($_POST['cust_id'] > 0)
+		{
+			$sql = "
+			update attached_files set
+				deleted='1' 
+			where xref_id='".sql_friendly($_SESSION['selected_merchant_id'])."' 
+				and section_id='".SECTION_LOGO_CUST."'
+			";
+			simple_query($sql);
+		}	
+		elseif($_POST['store_id'] > 0)
+		{
+			$sql = "
+			update attached_files set
+				deleted='1' 
+			where xref_id='".sql_friendly($_SESSION['selected_store_id'])."' 
+				and section_id='".SECTION_LOGO_STORE."'
+			";
+			simple_query($sql);
+		}
+		elseif($_POST['user_id'] > 0)
+		{
+			$sql = "
+			update attached_files set
+				deleted='1' 
+			where xref_id='".sql_friendly($_SESSION['selected_user_id'])."' 
+				and section_id='".SECTION_AVATAR."'
+			";
+			simple_query($sql);
+		}
+		display_xml_response("<rslt>1</rslt>");
+	}
+	
 ?>

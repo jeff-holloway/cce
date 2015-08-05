@@ -331,6 +331,7 @@ input.large {min-width:250px}
 
 .mrr_aud_file_wrapper_off { background-color:#FFFFFF; padding:8px 8px 8px 8px;  margin-bottom: 0px; border:0px solid #aaa; width:100%;}
 
+.auditor_file_cabinetx { padding:3px; font-size:11px; }
 .auditor_file_cabinet { background-color:#FFFFFF; border:1px solid #aaa; padding:8px; width:100%; }
 .auditor_file_cabinet2 { background-color:#FFFFFF; border:1px solid #aaa; padding:8px; width:100%; margin-bottom: 10px; }
 
@@ -396,13 +397,19 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
 .archived { color:#999999; text-decoration: line-through;}
 .tempate_editor_adder { color:#e19918; font-size:16px; font-weight:bold; text-transform: uppercase;}
 
+
+.template_item_mrr { }
+.template_item_file_mrr { }
+.mrr_aud_file_wrapper_marker {  } 
+
 .template_item 		{ width:100%;  color: #999999;font-family: AvenirLTStd-Roman;font-size: 10.3px;border-top:0 none;}
 .template_item_title 	{ color:#e19918; font-size:14px; font-weight:normal; text-transform: uppercase; }
 .template_item_file 	{ font-size:12px; font-weight:normal; }
 /* .template_item_subitems 	{  margin-bottom:10px;  } */
 .template_item_subtitle 	{ color:#e19918; font-size:14px; font-weight:normal; text-transform: uppercase; }
 .template_item_subfile 	{  font-size:12px; font-weight:normal; padding:0px; }		/*	 border-top: solid 1px #DDD;	*/
-.template_item_file_name { color:#999999;}
+.template_item_file_name {  font-size:12px; color:#999999; padding-top:0px;}
+.template_item_file_name2 {  font-size:12px; color:#999999; padding-top:4px;}
 
 .file_display_line { border:0; border-top: solid 0px #DDD; }
 
@@ -410,11 +417,13 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
 #pager {height:3px;background-color:white;overflow:hidden;display:none}
 #create-user {margin-bottom:5px}
 
+.mrr_aud_font_size { font-weight:normal;font-size:12px;padding-top:10px; }
+
 .tablesorterx td {padding:5px 0}
 .tablesorterx td {border-top:1px #ddd solid}
 .tablesorterx tr.odd {background-color:white}
 .tablesorterx thead {font-weight:normal;font-size:10px;padding-top:10px}
-.tablesorterx thead th {font-weight:normal;font-size:10px;padding-top:10px}
+.tablesorterx thead th {font-weight:normal;font-size:12px;padding-top:10px}
 .tablesorterx th.header {font-weight:normal;font-size:10px;padding-top:10px}
 .tablesorterx tbody td {font-weight:normal}
 
@@ -428,7 +437,7 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
 .ui-widget-header, .portlet-header {font-weight:normal}
 .internal_table tbody tr:first-child td {width:132px}
 
-.mrr_aud_file_wrapper { padding:10px 0px 1px 15px; background-color:#FFFFFF;margin-bottom:10px;margin-right:16px}
+.mrr_aud_file_wrapper { padding:8px 8px 8px 8px; background-color:#FFFFFF;margin-bottom:10px;margin-right:16px; border:1px solid #aaa; }
 
 .mrr_hint_link { color:blue; cursor:pointer; }
 
@@ -492,3 +501,82 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
 .doc_type_sect { border:1px solid #e19918; padding:5px;} 
 .doc_type_sect_hdr { text-transform:uppercase; font-weight:bold; color:#e19918;  cursor:pointer; }
 .doc_type_sect_item { color:#0000CC; cursor:pointer; }
+
+.filename_holder_mrr { overflow:hidden; width: 450px;}
+
+#cce_quick_links_display { 
+	background-color:#ffffff;
+	display:none;
+	/*
+	
+	*/
+}
+#cce_quick_links_editor { 
+	background-color:#ffffff;
+	display:none;
+	/*
+	
+	*/
+}
+.all_quick_link_edits {
+	float:left;
+	margin:5px;
+	padding-left:10px;
+	padding-bottom:10px;
+	width:32%;
+	background-color:#eeeeee;
+	border-color:#dddddd;
+	font-size:10px;
+}
+.all_quick_link_edits div { 	
+	width:100%;
+	height:25px;
+	
+	border:1px solid #dddddd;
+	border-top: 0px;
+	border-left: 0px;
+	border-right: 0px;
+	
+	padding-top:5px;
+	margin-bottom:5px;
+	text-align:left;
+	
+}
+.all_quick_link_edits div  span { 	
+	width:75%;	
+	display:inline-block;
+	text-align:right;
+}
+/*
+.mrr_quick_links_spacer { 
+	display:inline-block;
+	width:30px;
+	float:right;
+}
+*/
+.all_quick_link_edits label { 
+	padding-right:20px;
+	display:inline-block;
+	float:right;
+}
+.all_quick_link_edits span { 
+	width:30%;	
+	font-weight:bold;
+	display:inline-block;
+}
+.all_quick_link_input { width:180px; }
+#cce_quick_links_editor_pad { width:100%; }
+
+.mrr_quick_link {
+	display:inline-block;
+	background-color:#e19918; 
+	color:#FFFFFF; 
+	width:200px;
+	overflow:hidden;
+	padding:3px 10px 3px 10px;
+	margin:3px 10px 3px 10px;
+}
+.mrr_quick_link:hover { 
+	background-color:#dddddd; 
+	cursor:pointer;
+}

@@ -20,7 +20,7 @@
 	$section_id_array[SECTION_REPORT] = "Report";
 	$section_id_array[SECTION_AVATAR] = "Avatar";
 	$section_id_array[SECTION_LOGO_CUST] = "Company Logo";
-	$section_id_array[SECTION_REPORT] = "Store Image";
+	$section_id_array[SECTION_LOGO_STORE] = "Store Image";
 	$section_id_array[SECTION_CERTIFICATES] = "Certificates";
 	
 	$section_id_array_page[SECTION_USER] = '';		// 'users.php?id={xref_id}';

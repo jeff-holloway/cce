@@ -1,6 +1,56 @@
 <?
 include('application.php');
 include('header.php');
+include('includes/PDFInfo.php');
+
+
+$imagick = new Imagick();
+$imagick->setResolution(300,300);
+$imagick->readImage('hold/test.pdf');
+$imagick->setImageFormat("png");
+$imagick->writeImage('hold/test.png');
+
+//var_dump($res);
+
+echo "<img src='hold/test.png'>";
+
+die('<br><br>done');
+
+
+$fname = 'hold/test.pdf';
+$fsize = filesize($fname);
+
+if($fsize < 1024 * 1024 * 4) {
+	
+	$p = new PDFInfo;
+	$p->load($fname);
+
+	
+	echo "Creator: " . $p->creator() . "<br>";
+	echo "Producer: " . $p->producer(). "<br>";
+	echo "Title: " . $p->title(). "<br>";
+	echo "Description: " . $p->get_attributes("dc:description"). "<br>";
+	echo "Pages: " . $p->pages(). "<br>";
+	
+	die;
+	
+	// see if this pdf is simply a container
+	$handle = fopen($fname, 'r');
+	$valid = false; // init as false
+	while (($buffer = fgets($handle)) !== false) {
+	    if (strpos($buffer, "(FinCEN)") !== false) {
+	        $valid = true;
+	        break; // Once you find the string, you should break out the loop.
+	    }      
+	}
+	fclose($handle);
+}
+
+if($valid) {
+	echo "FinCEN form found";
+} else {
+	echo "regular pdf";
+}
 
 // test git update
 die;

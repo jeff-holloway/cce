@@ -838,7 +838,6 @@ function show_notice(msg)
 {
 	$.noticeAdd({text: msg});
 }
-
 function update_cce_message(id,msg_type)
 {
 	type_msg="";
@@ -903,6 +902,167 @@ function fetch_tagline_filler()
 	   	}
  	});	
 }
+
+function edit_quick_links(id,cd)
+{
+	fieldname="";					//this is the database field name, not the form element.
+	val="";
+	
+	if(cd==1)
+	{
+		fieldname="position_id";	
+		val="(position_id - 1)";
+	}
+	if(cd==2)
+	{
+		fieldname="position_id";	
+		val="(position_id + 1)";
+	}
+	if(cd==3)
+	{
+		fieldname="deleted";	
+		val="1";
+	}
+	if(cd==4)
+	{
+		fieldname="link_name";	
+		val="'"+$('#quick_link_'+id+'_name').val()+"'";
+	}
+	if(cd==5)
+	{
+		fieldname="link_url";	
+		val="'"+$('#quick_link_'+id+'_url').val()+"'";
+	}
+	if(cd==6)
+	{
+		fieldname="merchant_id";			//merchant_id_list
+		val="'"+$('#quick_link_'+id+'_cust').val()+"'";
+	}
+	if(cd==7)
+	{
+		fieldname="store_id";			//store_id_list
+		val="'"+$('#quick_link_'+id+'_store').val()+"'";
+	}
+	if(cd==8)
+	{
+		fieldname="private_link";	
+		val="0";
+		if($('#quick_link_'+id+'_private').is(':checked'))		val="1";
+	}
+	
+	if(id > 0)
+	{
+     	$.ajax({
+     	   	type: "POST",
+     	   	url: "ajax.php?cmd=mrr_update_quick_links",
+     	   	cache:false,
+     	   	dataType: "xml",	   	
+     	   	data: {
+     	   		"id":id,
+     	   		"field":fieldname,
+     	   		"value":val
+     	   	},
+     	   	error: function() {
+     			msgbox("General error updating Quick Link settings. Please try again.");
+     		},	   	
+          	success: function(xml) {   		
+     	   		
+     	   		if(cd==7)		
+     	   		{
+     	   			edit_quick_links(id,6);			//update the customer as well if the store is set.	   		
+     	   		}
+     	   		else
+     	   		{
+          	   		fetch_quick_links(1);			//refresh the links on display side
+          	   		if(cd==1 || cd==2 || cd==3)
+          	   		{
+          	   			fetch_quick_links(2);		//refresh the editor list.
+          	   		}
+     	   		}
+     	   	}
+      	});
+	}
+	else
+	{		
+		namer=$('#quick_link_0_name').val();
+		urler=$('#quick_link_0_url').val();
+		custid=$('#quick_link_0_cust').val();
+		storeid=$('#quick_link_0_store').val();
+		
+		plink="0";
+		if($('#quick_link_0_private').is(':checked'))		plink="1";
+			
+		$.ajax({
+     	   	type: "POST",
+     	   	url: "ajax.php?cmd=mrr_update_quick_links_new",
+     	   	cache:false,
+     	   	dataType: "xml",	   	
+     	   	data: {
+     	   		"id":id,
+     	   		"name":namer,
+     	   		"url":urler,
+     	   		"private_link":plink,
+     	   		"merchant_id":custid,
+     	   		"store_id":storeid,
+     	   		"m_list": '',
+     	   		"s_list": '',
+     	   		"row_num": 1,
+     	   		"col_num": 1,
+     	   		"position_id": 1    	   		
+     	   	},
+     	   	error: function() {
+     			msgbox("General error adding new Quick Link settings. Please try again.");
+     		},	   	
+          	success: function(xml) {   		
+     	   		fetch_quick_links(1);		//refresh the links on display side
+     	   		fetch_quick_links(2);		//refresh the editor list.
+     	   		
+     	   		$('#quick_link_0_name').val('');
+     	   		$('#quick_link_0_url').val('');
+     	   		$('#quick_link_0_cust').val('0');
+     	   		$('#quick_link_0_store').val('0');     
+     	   		$('#quick_link_0_private').attr('checked','');	   		
+     	   	}
+      	});
+	}
+}
+function fetch_quick_links(moder)
+{
+	$.ajax({
+	   	type: "POST",
+	   	url: "ajax.php?cmd=mrr_reload_quick_links",
+	   	cache:false,
+	   	dataType: "xml",	   	
+	   	data: {
+	   	},
+	   	error: function() {
+			msgbox("General error updating Quick Links. Please try again.");
+		},	   	
+     	success: function(xml) {   		
+	   		if(moder==0 || moder==1 || moder==3)
+	   		{
+	   			mrr_tab2=$(xml).find('mrrQuickLinks').text();
+	   			$("#cce_quick_links_display").html(mrr_tab2);	
+	   		}
+	   		if(moder==0 || moder==2 || moder==3)
+	   		{
+	   			mrr_tab3=$(xml).find('mrrEditLinks').text();
+	   			$("#cce_quick_links_editor").html(mrr_tab3);	
+	   		}
+	   		
+	   		if(moder > 0)	
+	   		{
+	   			$( "#cce_quick_links_editor_pad" ).show();	   			
+	   			$( "#quick_links_0_block" ).hide();
+	   		}
+	   		
+	   		$( "#quick_links_0_block" ).hide();
+	   		
+	   		$('.buttonize').button();   		   		 		   		
+	   	}
+ 	});
+}
+
 function fetch_cce_messages()
 {
 	$.ajax({
@@ -919,7 +1079,10 @@ function fetch_cce_messages()
 	   		mrr_tab=$(xml).find('mrrTab').text();
 	   		//console.log("reloading: " + mrr_tab);
 	   		$("#cce_system_message_display").html(mrr_tab);	
-	   		$('.buttonize').button();   		   		 		   		
+	   		
+	   		$('.buttonize').button(); 
+	   		
+	   		fetch_quick_links(0);  		   		 		   		
 	   	}
  	});
 }
@@ -978,8 +1141,7 @@ function allow_cce_message_edit(id,msg_type)
           		$( this ).dialog( "close" );
           	}
           }
-	});  
-     
+	});       
 }
 function allow_cce_message_edit2(id)
 {
@@ -1159,7 +1321,7 @@ function mrr_file_renamer(id,moder)
           				          				
           				if(docid==0)
           				{
-          					msgbox("Document could not be located to rename. Please try again");
+          					msgbox("Document could not be located to edit. Please try again");
           				}
           				else
           				{
@@ -1206,7 +1368,8 @@ function mrr_file_renamer(id,moder)
           	}
           },
           buttons: {
-          	"Okay":  function() {	rename_document(moder);	dialog.dialog( "close" );  	}
+          	"Okay":  function() {	rename_document(moder);	dialog.dialog( "close" );  	},
+          	"Cancel":  function() {	dialog.dialog( "close" );  	}
           }
      });     
      dialog.dialog( "open" );
@@ -3249,6 +3412,7 @@ function pick_selected_item(user,merchant,store)
 		url: "ajax.php?cmd=pick_selected_item",
 		type: "post",
 		dataType: "xml",
+		async: false,
 		data: {
 			"user_id":user,
 			"merchant_id":merchant,
@@ -3258,12 +3422,15 @@ function pick_selected_item(user,merchant,store)
 			//msgbox("General error retrieving store details. Please try again");
 		},
 		success: function(xml) {
+			
+			mrr_tab=$(xml).find('mrrTab').text();					
+			$('#bread_crumb_trail').html(mrr_tab);		
+			
 			update_bread_crumb_trail();	
 			
 			$('#cust_display_portlet').html('');
 			$('#store_display_portlet').html('');
-			//$('#user_display_portlet').html('');
-			
+			//$('#user_display_portlet').html('');		
 		}
 	});	
 }
@@ -3275,6 +3442,7 @@ function debread_crumb_trail(moder)
 		url: "ajax.php?cmd=debread_crumb_trail",
 		type: "post",
 		dataType: "xml",
+		async: false,
 		data: {
 			"mode":moder		
 		},
@@ -3293,6 +3461,7 @@ function update_bread_crumb_trail()
 		url: "ajax.php?cmd=update_bread_crumb_trail",
 		type: "post",
 		dataType: "xml",
+		async: false,
 		data: {
 					
 		},
@@ -3498,8 +3667,7 @@ function refresh_auditor2_assignment()
 				mrr_tab=$(xml).find('mrrTab').text();
 				$('#assigned_files_section').html(mrr_tab);
 				$('.buttonize').button();
-			}			
-			
+			}
 		}
 	});
 }
@@ -3526,7 +3694,7 @@ function refresh_auditor2_files()
 			{
 				mrr_tab=$(xml).find('mrrTab').text();
 				$('#auditor2_files_section').html(mrr_tab);
-				$('.buttonize').button();
+				$('.buttonize').button();				
 			}			
 			
 		}
@@ -4142,3 +4310,102 @@ function edit_user_account(id,moder)
 				
 			}
 	}
+	
+	function mrr_clear_cust_store_logo(cust,store,user)
+	{
+		$.ajax({
+     			url: "ajax.php?cmd=remove_logo_list",
+     			type: "post",
+     			dataType: "xml",
+     			data: {
+     				"cust_id":cust,
+     				"store_id":store,
+     				"user_id":user
+     			},
+     			error: function() {
+     				msgbox("General error removing logo/image. Please try again");
+     			},
+     			success: function(xml) 
+     			{				
+     				show_notice('Logo/image removed.');   
+     				if(cust > 0)
+     				{
+     					$('#cust_logo').attr('src','images/no-profile-image.png');
+     					$('#logo_image_holder').css("background-image","url('images/no-profile-image.png')");
+     				}
+     				if(store > 0)
+     				{
+     					$('#store_loc_logo').attr('src','images/no-profile-image.png');
+     					$('#store_image_holder').css("background-image","url('images/no-profile-image.png')");
+     				}
+     				if(user > 0)
+     				{
+     					$('#user_image_holder').css("background-image","url('images/no-profile-image.png')");
+     				}
+     			}
+     	}); 		
+	}
+	
+	
+function quick_links_editor()
+{
+	//obj = '#'+$("#quick_links_editor").find('textarea').attr('id');
+
+	$( "#cce_quick_links_editor" ).dialog({
+		modal: true,
+		inline: true,
+          width: 1000,
+          height: 650,
+          open: function() {
+			
+			//console.log("OPEN: Removing tinymce: V3 " + obj);
+			//tinymce.remove(obj);			
+			//console.log($(obj).attr('aria-hidden'));			
+			//console.log("OPEN: initing tinymce on : " + obj);
+			//tiny_mce_init(obj);
+			
+			//$('.buttonize').button();
+			/*
+			$(document).on('focusin', function(e) {
+			    if ($(event.target).closest(".mce-window").length) {
+					e.stopImmediatePropagation();
+				}
+			});
+			*/
+			
+			
+			$( "#cce_quick_links_editor_pad" ).show();
+          },
+          close: function() {
+          	//console.log("Removing tinymce: " + obj);
+          	//tinymce.remove(obj);
+          	
+          	$( "#cce_quick_links_editor_pad" ).hide();
+          },
+          title: 'Edit Quick Links',
+          buttons: {
+          	"Add": function() 
+          	{     
+          		$( "#quick_links_0_block" ).show();        	 		
+          	},
+          	"Save": function() 
+          	{     
+          		//$(obj).val(tinymce.get('cce_msg_body_' + id).getContent());
+          		
+          		//console.log("UPDATE: Removing tinymce: V2 " + obj);
+          		//tinymce.remove(obj);
+          		//tiny_mce_init(obj);
+          		
+          		//update_cce_message(id,msg_type);          	 	
+          	 	
+          	 	edit_quick_links(0,0);          	 	
+          	 	
+          	 	$( this ).dialog( "close" );             	 		
+          	},
+          	"Cancel": function() 
+          	{
+          		$( this ).dialog( "close" );
+          	}
+          }
+	});       
+}

@@ -58,9 +58,24 @@ if(isset($_FILES['upl_'.$upcounter]) && $_FILES['upl_'.$upcounter]['error'] == 0
 	{
 		$use_store_id=$_SESSION['store_id'];	
 	}
-		
+			
 	if(move_uploaded_file($_FILES['upl_'.$upcounter]['tmp_name'], $move_destination))
 	{		
+     	if((substr_count($finfo['extension'],"pdf") > 0 || substr_count($finfo['extension'],"PDF") > 0) && $public==1)
+     	{
+     		$move_destination_png=$move_destination;
+     		$move_destination_png=str_replace(".pdf",".png",$move_destination_png);
+     		$move_destination_png=str_replace(".PDF",".png",$move_destination_png);
+     		
+     		$imagick = new Imagick();
+     		$imagick->setResolution(300,300);
+     		$imagick->readImage($move_destination);
+     		$imagick->setImageFormat("png");
+     		$imagick->writeImage($move_destination_png);
+     		
+     		$new_filename=$move_destination_png;
+     	}
+		
 		$sql = "
 			insert into attached_files
 				(xref_id,

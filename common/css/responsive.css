@@ -1,27 +1,35 @@
 @media only screen and (min-width: 1200px) {
 	.main_center_container {width:78%;border:0px black solid}
+	
+	.filename_holder_mrr {  max-width: 450px;}
 }
 @media only screen and (min-width: 1420px) {
 	.main_center_container {width:80%;border:0px black solid}
 	
+	.filename_holder_mrr {  max-width: 450px;}
 }
 @media only screen and (min-width: 1650px) {
 	.main_center_container {width:84%;border:0px black solid}
 	#merchant_customers th {font-size:13px}
+	.filename_holder_mrr {  max-width: 450px;}
 }
 
 @media only screen and (min-width: 2000px) {
 	.main_center_container {width:87%;border:0px black solid}
+	.filename_holder_mrr {  max-width: 450px;}
 }
 @media only screen and (min-width: 2570px) {
 	.main_center_container {width:90%;border:0px black solid}
+	.filename_holder_mrr {  max-width: 450px;}
 }
 @media only screen and (min-width: 3500px) {
 	.main_center_container {width:92%;border:0px black solid}
+	.filename_holder_mrr {  max-width: 450px;}
 }
 @media only screen and (max-width: 1420px) {
 	#merchant_customers th {font-size:11px}
 	.mrr_search_cid {font-size:11px !important}
+	.filename_holder_mrr { max-width: 450px;}
 	
 }
 @media only screen and (max-width: 1199px) {
@@ -29,7 +37,7 @@
 .privacy_policy > p{font-size:11px;}
 .imp_date_list p{width:65%;}
 .navbar-nav > li > a {font-size:15px !important; padding:28px 11px 0 11px !important}
-
+.filename_holder_mrr {  max-width: 450px;}
 
 
 }
@@ -54,9 +62,11 @@
 .logo {max-width:220px}
 .logo img {min-width:220px;max-width:220px}
 
+.filename_holder_mrr { max-width: 350px;}
 }
 @media only screen and (max-width: 812px) {
 	.navbar-nav > li > a {font-size:11.5px !important}
+	.filename_holder_mrr { max-width: 250px;}
 }
 @media only screen and (max-width: 767px) {
 	#myTable td {font-size: 10px;}
@@ -68,6 +78,9 @@
 	.footer_middle_items > li{margin-bottom:5px;}
 	.footer_middle_menu h4{font-size:16px;}
 	.column {min-width:auto}
+	
+	.filename_holder_mrr { max-width: 200px;}
+	
 	.mrr_tagline {display:none}
 	/*Offcanvas Css*/
 	/* outer div */
@@ -94,6 +107,7 @@
 }
 @media only screen and (max-width: 479px) {
 	.middle_main_content {max-width: 479px}
+	.filename_holder_mrr {  max-width: 150px;}
 #myTable td {font-size: 7px;}
 .cust_info .table.table-striped td, .store_location .table.table-striped td, .edit_user .table.table-striped td{display:table;width:100%;}
 .add_user_list p{font-size:8.5px;}

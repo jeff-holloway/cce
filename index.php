@@ -30,7 +30,7 @@ $_SESSION['selected_doc_type_id']=0;
 	//echo "<br>U".$_SESSION['selected_user_id']."M".$_SESSION['selected_merchant_id']."S".$_SESSION['selected_store_id']." ... U".$_SESSION['user_id']."M".$_SESSION['merchant_id']."S".$_SESSION['store_id']."<br>";
 ?>
 <div class="column move_box_left">
-		<div class="portlet left_col sort_tbl" id='portlet_SearchBox' style='border:1px solid #999999;'>
+		<div class="portlet left_col sort_tbl" id='portlet_SearchBox'>
 			<div class="Table_sort_main">
      			<div class="search_box">
      				<div class="input-group">
@@ -73,7 +73,7 @@ $_SESSION['selected_doc_type_id']=0;
      			</div>
 			</div>
 		</div>
-		<div class="portlet left_col cust_info default_closed" id='portlet_CustInfo' style='border:1px solid #999999;'>
+		<div class="portlet left_col cust_info default_closed" id='portlet_CustInfo'>
 			<div class="portlet-header">CUSTOMER INFORMATION</div>
 			<div class="portlet-content">
 					<table class="table table-striped" id='mrr_merchant_display'>
@@ -239,6 +239,12 @@ $_SESSION['selected_doc_type_id']=0;
                          	</div>
                          	
                          	<div id='logo_image_holder_holder'></div>	
+                         	<div class='field2'>
+                         		<label>&nbsp;</label>
+                         		<span>
+                         			<input type='button' name='clear_customer_logo' id='clear_customer_logo' value='Clear Customer Logo' class='btn btn-default add_new_btn' onClick='mrr_clear_cust_store_logo(1,0,0);'>
+                         		</span>
+                         	</div>
                          	
                          	<? if($_SESSION['access_level'] >=70) { ?>
                               	<div class='field2'>
@@ -392,7 +398,7 @@ $_SESSION['selected_doc_type_id']=0;
 					
 			</div>
 		</div>
-		<div class="portlet left_col store_location default_closed" id='portlet_StoreLocation' style='border:1px solid #999999;'>
+		<div class="portlet left_col store_location default_closed" id='portlet_StoreLocation'>
 			<div class="portlet-header">STORE LOCATION INFORMATION</div>
 			<div class="portlet-content">
 					<table class="table table-striped" id='mrr_store_display'>
@@ -613,6 +619,12 @@ $_SESSION['selected_doc_type_id']=0;
                          	<? } ?>
                          	                         	
                          	<div id='store_image_holder_holder'></div>	
+                         	<div class='field2'>
+                         		<label>&nbsp;</label>
+                         		<span>
+                         			<input type='button' name='clear_store_logo' id='clear_store_logo' value='Clear Store Image' class='btn btn-default add_new_btn' onClick='mrr_clear_cust_store_logo(0,1,0);'>
+                         		</span>
+                         	</div>
                          	
                          	<div class='field2'>
                          		<label for='date_title'>FI Name</label>
@@ -742,7 +754,7 @@ $_SESSION['selected_doc_type_id']=0;
 					
 			</div>
 		</div>
-		<div class="portlet left_col edit_user" id='portlet_EditUser' style='border:1px solid #999999;'>
+		<div class="portlet left_col edit_user" id='portlet_EditUser'>
 			
 			<div class="search_box">
 				<div class="input-group">
@@ -796,6 +808,8 @@ $_SESSION['selected_doc_type_id']=0;
 		<div class="portlet welcome_msg right_col" id='portlet_WelcomeMsg'>
 			<div class="portlet-content">
 				<div id='cce_system_message_display'>Loading...</div>
+				<div id='cce_quick_links_display'></div>
+				<div id='cce_quick_links_editor'></div>
 			</div>
 		</div>	
 		<div class="portlet right_col reports default_closed" id='portlet_Reports'>
@@ -1184,6 +1198,7 @@ $_SESSION['selected_doc_type_id']=0;
           $( "#create-user" ).button().on( "click", function() {
           	dialog.dialog( "open" );
           });
+                 
           $( "#create-user-co" ).button().on( "click", function() {
           	if(parseInt($("#ms_id").val()) ==0)
           	{          	
