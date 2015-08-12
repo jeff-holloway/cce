@@ -66,6 +66,7 @@
 	<script src="includes/mini_upload/assets/js/script.js"></script>	
 	
 	<script>
+		var scroll_pos_fix_working_flag = false;
 		function mrr_search_highlighter(id,cd)
 		{
 			if(cd > 0)
@@ -284,9 +285,22 @@
 		*/
 	});
 
+	
 	$(document).on('scroll', function() {
-	  $(document).scrollLeft(0);
+		if(!scroll_pos_fix_working_flag) {
+			// set a flag so we don't call this over and over while we're still scrolling
+			scroll_pos_fix_working_flag = true;
+			setTimeout(fix_scroll, 500);
+	  		
+	  	}
 	});	
+	
+	function fix_scroll() {
+		scroll_pos_fix_working_flag = false;
+		//console.log("Fixing scroll now");
+		$(document).scrollLeft(0);
+	}
+	
 	
 	
 	
