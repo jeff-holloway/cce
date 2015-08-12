@@ -506,6 +506,9 @@ else
 		<? if(trim($namer) == "Financial Institution") {  ?>	
 			get_financial_inst_details_display();
 		<? } ?>	
+		<? if(trim($namer) == "IRS") {  ?>	
+			get_financial_inst_details_display();
+		<? } ?>	
 		
 		doc_pg=<?= $_GET['id'] ?>;	
 		
