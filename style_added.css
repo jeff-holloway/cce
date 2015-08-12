@@ -506,16 +506,16 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
 
 #cce_quick_links_display { 
 	background-color:#ffffff;
-	display:none;
-	/*
 	
+	/*
+	display:none;
 	*/
 }
 #cce_quick_links_editor { 
 	background-color:#ffffff;
-	display:none;
-	/*
 	
+	/*
+	display:none;
 	*/
 }
 .all_quick_link_edits {
