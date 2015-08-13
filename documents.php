@@ -474,10 +474,14 @@ else
 	$().ready(function() {	
 		$('.buttonize').button();
 		
+		doc_pg=<?= $_GET['id'] ?>;	
+		
+		fetch_tagline_filler();			
+		
 		//load_co_slot_info();
 		<? if(trim($namer) == "Training Center" && $_SESSION['selected_merchant_id'] > 0) {  ?>
 			//update_bread_crumb_trail();	
-			update_bread_crumb_trail_v2a();
+			update_bread_crumb_trail_v2a2();
 			
 			show_user_cert(<?=$xref_id ?>,'#cert_image_holder');
 			
@@ -491,12 +495,20 @@ else
 			$('.upload_document_label').html('Upload Certificate');
 			$('.upload_document_label').css('font-size','9px');
 			
-			
+			<? if($_GET['id']==3) { ?>
+				update_bread_crumb_trail_stripped2a();
+			<? } ?>						
 		<? } ?>	
 		<? if(trim($namer) == "Compliance Officer" && $_SESSION['selected_merchant_id'] > 0) {  ?>
 			//update_bread_crumb_trail();	
-			update_bread_crumb_trail_v2a();
+			update_bread_crumb_trail_v2a2();
+			
 			show_user_cert(<?=$xref_id ?>,'#cert_image_holder');
+						
+			<? if($_GET['id']==36) { ?>
+				update_bread_crumb_trail_stripped2a();
+			<? } ?>	
+			
 		<? } ?>	
 		
 		<? if(trim($namer) == "Compliance Manager") {  ?>
@@ -509,21 +521,83 @@ else
 		<? if(trim($namer) == "IRS") {  ?>	
 			get_financial_inst_details_display();
 		<? } ?>	
+				
 		
-		doc_pg=<?= $_GET['id'] ?>;	
-		
-		<? if($_GET['id']==3 || $_GET['id']==36) { ?>
-			update_bread_crumb_trail_stripped();
-		<? } ?>
-		
-		fetch_tagline_filler();	
      });
      
      $('#search_cust').keypress(function(event) {
      	if(event.keyCode == 13) load_cust_search_v2();
      });
      
-     
+          
+     function update_bread_crumb_trail_v2a2()
+     {
+     	$.ajax({
+     		url: "ajax.php?cmd=update_bread_crumb_trail",
+     		type: "post",
+     		dataType: "xml",
+     		data: {
+     				"moder":212
+     		},
+     		error: function() {
+     			//msgbox("General error retrieving store details. Please try again");
+     		},
+     		success: function(xml) {
+     			mrr_tab=$(xml).find('mrrTab').text();					
+     			$('#bread_crumb_trail').html(mrr_tab);
+     			
+     			mycomp=parseInt($('#bct_merchant_id').html());
+     			//mystore=parseInt($('#bct_store_id').html());
+     			//myuser=parseInt($('#bct_user_id').html());
+     			
+     			get_merchant_details_display(mycomp);
+     			
+     			load_cust_search_v2();	
+     		}
+     	});	
+     }
+     function update_bread_crumb_trail_stripped2a()
+     {	//async:false,
+     	$.ajax({
+     		url: "ajax.php?cmd=update_bread_crumb_trail",
+     		type: "post",
+     		dataType: "xml",
+     		
+     		data: {
+     			"moder":312	
+     		},
+     		error: function() {
+     			//msgbox("General error retrieving store details. Please try again");
+     		},
+     		success: function(xml) {
+     			mrr_tab=$(xml).find('mrrTab').text();					
+     			$('#bread_crumb_trail').html(mrr_tab);
+     			
+     			mycomp=parseInt($('#bct_merchant_id').html());
+     			mystore=parseInt($('#bct_store_id').html());
+     			myuser=parseInt($('#bct_user_id').html());
+     			
+     			//fetch_cce_messages();
+          		//$('.buttonize').button();
+     			
+     			//load_merchant_program();
+          		//get_merchant_details_display(mycomp);
+          		//load_cust_search_v2();
+          		//show_waiting_files_status();
+          		//load_dynamic_sidebar();
+     			
+     			
+     			
+     			//refresh_auditor2_assignment();
+     			//refresh_auditor2_files();
+     			
+     			//mrr_tab=$(xml).find('mrrTab').text();					
+     			//$('#bread_crumb_trail').html(mrr_tab);
+     			//$('#bread_crumb_trail').show();
+     		}
+     	});	
+     } 
+
      function afterPortletMove() {
      	
      	$('.mrr_aud_file_wrapper').each(function() {

@@ -889,6 +889,7 @@ function fetch_tagline_filler()
 	   	type: "POST",
 	   	url: "ajax.php?cmd=load_cce_tagline",
 	   	cache:false,
+	   	async:false,
 	   	dataType: "xml",	   	
 	   	data: {
 	   	},
@@ -898,7 +899,7 @@ function fetch_tagline_filler()
      	success: function(xml) {   		
 	   		mrr_tab=$(xml).find('mrrTab').text();
 	   		$("#tagline_filler").html(mrr_tab);	
-	   		$('.buttonize').button();   		   		 		   		
+	   		//$('.buttonize').button();   		   		 		   		
 	   	}
  	});	
 }
@@ -3302,7 +3303,7 @@ function load_cust_search_v2() {
 			else
 			{
 				mrr_tab=$(xml).find('mrrTab').text();
-				console.log("loading info");
+				//console.log("loading info");
 				
 				$('#merchant_customers').html(mrr_tab);
 
@@ -3311,74 +3312,6 @@ function load_cust_search_v2() {
 			
 		}
 	});
-}
-function pick_selected_item_v2(user,merchant,store)
-{	
-	$.ajax({
-		url: "ajax.php?cmd=pick_selected_item",
-		type: "post",
-		dataType: "xml",
-		async:false,
-		data: {
-			"user_id":user,
-			"merchant_id":merchant,
-			"store_id":store,
-			"mode_id":1
-		},
-		error: function() {
-			//msgbox("General error retrieving store details. Please try again");
-		},
-		success: function(xml) {
-			update_bread_crumb_trail_v2();			
-		}
-	});	
-}
-function update_bread_crumb_trail_v2a()
-{
-	$.ajax({
-		url: "ajax.php?cmd=update_bread_crumb_trail",
-		type: "post",
-		dataType: "xml",
-		data: {
-					
-		},
-		error: function() {
-			//msgbox("General error retrieving store details. Please try again");
-		},
-		success: function(xml) {
-			mrr_tab=$(xml).find('mrrTab').text();					
-			$('#bread_crumb_trail').html(mrr_tab);
-			
-			mycomp=parseInt($('#bct_merchant_id').html());
-			//mystore=parseInt($('#bct_store_id').html());
-			//myuser=parseInt($('#bct_user_id').html());
-			
-			get_merchant_details_display(mycomp);
-			
-			load_cust_search_v2();	
-		}
-	});	
-}
-function update_bread_crumb_trail_v2()
-{
-	$.ajax({
-		url: "ajax.php?cmd=update_bread_crumb_trail",
-		type: "post",
-		dataType: "xml",
-		data: {
-					
-		},
-		error: function() {
-			//msgbox("General error retrieving store details. Please try again");
-		},
-		success: function(xml) {
-			mrr_tab=$(xml).find('mrrTab').text();					
-			$('#bread_crumb_trail').html(mrr_tab);
-			
-			//location.reload(); 
-			if(doc_pg > 0)  window.location.href = "/documents.php?id="+doc_pg+"";
-		}
-	});	
 }
 
 function load_co_slot_info()
@@ -3404,8 +3337,9 @@ function load_co_slot_info()
 			
 		}
 	});
-}     
-     
+}       
+
+
 function pick_selected_item(user,merchant,store)
 {	
 	$.ajax({
@@ -3434,7 +3368,27 @@ function pick_selected_item(user,merchant,store)
 		}
 	});	
 }
-
+function pick_selected_item_v2(user,merchant,store)
+{	
+	$.ajax({
+		url: "ajax.php?cmd=pick_selected_item",
+		type: "post",
+		dataType: "xml",
+		async:false,
+		data: {
+			"user_id":user,
+			"merchant_id":merchant,
+			"store_id":store,
+			"mode_id":1
+		},
+		error: function() {
+			//msgbox("General error retrieving store details. Please try again");
+		},
+		success: function(xml) {
+			update_bread_crumb_trail_v2();			
+		}
+	});	
+}
 
 function debread_crumb_trail(moder)
 {	
@@ -3463,7 +3417,7 @@ function update_bread_crumb_trail()
 		dataType: "xml",
 		async: false,
 		data: {
-					
+			"moder":1		
 		},
 		error: function() {
 			//msgbox("General error retrieving store details. Please try again");
@@ -3571,6 +3525,54 @@ function update_bread_crumb_trail()
 		}
 	});	
 } 
+
+function update_bread_crumb_trail_v2()
+{
+	$.ajax({
+		url: "ajax.php?cmd=update_bread_crumb_trail",
+		type: "post",
+		dataType: "xml",
+		data: {
+				"moder":20	
+		},
+		error: function() {
+			//msgbox("General error retrieving store details. Please try again");
+		},
+		success: function(xml) {
+			mrr_tab=$(xml).find('mrrTab').text();					
+			$('#bread_crumb_trail').html(mrr_tab);
+			
+			//location.reload(); 
+			if(doc_pg > 0)  window.location.href = "/documents.php?id="+doc_pg+"";
+		}
+	});	
+}
+function update_bread_crumb_trail_v2a()
+{
+	$.ajax({
+		url: "ajax.php?cmd=update_bread_crumb_trail",
+		type: "post",
+		dataType: "xml",
+		data: {
+				"moder":21
+		},
+		error: function() {
+			//msgbox("General error retrieving store details. Please try again");
+		},
+		success: function(xml) {
+			mrr_tab=$(xml).find('mrrTab').text();					
+			$('#bread_crumb_trail').html(mrr_tab);
+			
+			mycomp=parseInt($('#bct_merchant_id').html());
+			//mystore=parseInt($('#bct_store_id').html());
+			//myuser=parseInt($('#bct_user_id').html());
+			
+			get_merchant_details_display(mycomp);
+			
+			load_cust_search_v2();	
+		}
+	});	
+}
 function update_bread_crumb_trail_stripped()
 {
 	$.ajax({
@@ -3578,7 +3580,7 @@ function update_bread_crumb_trail_stripped()
 		type: "post",
 		dataType: "xml",
 		data: {
-					
+			"moder":3		
 		},
 		error: function() {
 			//msgbox("General error retrieving store details. Please try again");
@@ -3599,13 +3601,18 @@ function update_bread_crumb_trail_stripped()
      		show_waiting_files_status();
      		load_dynamic_sidebar();
 			
-			$('#bread_crumb_trail').show();
+			
 			
 			//refresh_auditor2_assignment();
 			//refresh_auditor2_files();
+			
+			mrr_tab=$(xml).find('mrrTab').text();					
+			$('#bread_crumb_trail').html(mrr_tab);
+			$('#bread_crumb_trail').show();
 		}
 	});	
 } 
+
 
 function view_attached_file_simulator(section_id, xref_id, id) 
 {	

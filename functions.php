@@ -466,7 +466,7 @@
      		$tagline="<span id='cce_sub_".$row['id']."'>".$row['subject']."</span> ".$editor."".$res_tab."";
      	}  
      	//...
-     	$new_tab.="<div class='mrr_tagline'>".$tagline."</div><span id='bread_crumb_trail'></span>";
+     	$new_tab.="<div class='mrr_tagline'>".$tagline."</div><span id='bread_crumb_trail'></span>";	//
      	
 		return $new_tab;
 	}
@@ -5447,11 +5447,29 @@
 		
 		$mrr_adder="";
 		
+		
+     	if($_SESSION['access_level'] == 70 && $_SESSION['selected_merchant_id']==0)
+     	{	//no merchnat selected...user should at least have the group selected.
+     		$sql="
+               	select merchant_id,store_id
+                  	from users
+                  	where id='".sql_friendly($_SESSION['user_id'])."'
+               ";
+               $data = simple_query($sql);          
+               if($row = mysqli_fetch_array($data))
+               {
+               	$_SESSION['selected_merchant_id']=$row['merchant_id'];
+               	$_SESSION['selected_store_id']=$row['store_id'];
+               	//$_SESSION['selected_store_id']=$_SESSION['store_id'];
+     			//$_SESSION['store_id']=0;
+               }
+     	}     	
+				
 		//find merchant files
      	if($_SESSION['merchant_id'] == 0 && $_SESSION['selected_merchant_id'] > 0)
      	{
      		$mrr_adder.=" and (attached_files.merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."'";
-     		if($_SESSION['access_level'] >=70)
+     		if($_SESSION['access_level'] >=50)
      		{
      			$mrr_adder.=" or (merchants.parent_company_id='".sql_friendly($_SESSION['selected_merchant_id'])."' and merchants.parent_company_id>0) ";	
      		}     
@@ -5460,6 +5478,10 @@
      	elseif($_SESSION['merchant_id'] > 0)
      	{
      		$mrr_adder.=" and attached_files.merchant_id='".sql_friendly($_SESSION['merchant_id'])."'";
+     	}
+     	elseif($_SESSION['merchant_id'] == 0 && $_SESSION['selected_merchant_id']==0)
+     	{
+     		$mrr_adder.=" and attached_files.merchant_id='0'";		//added to prevent group manager from seeing anything if they have nothing selected ar all
      	}
      	
      	//find store fies
@@ -5503,6 +5525,7 @@
              	where attached_files.deleted=0
              		and (attached_files.template_item_id= '".sql_friendly($template_item_id)."' or attached_files.template_item_id_sub= '".sql_friendly($template_item_id)."')               		 
              		".$mrr_adder."
+             		and attached_files.merchant_id>0
              		and attached_files.linedate_display_start <= NOW()
              	order by attached_files.public_name asc,attached_files.id asc
           ";
@@ -6803,7 +6826,7 @@
      	
      	if($override==0)
      	{	//use current session if not overriding by function default settings...which should be the same.
-     		$user=$_SESSION['selected_user_id'];
+     		$user=0;	//$_SESSION['selected_user_id'];
      		$merchant=$_SESSION['selected_merchant_id'];
      		$store=$_SESSION['selected_store_id'];
      	}
@@ -6834,6 +6857,22 @@
      	
      	if(isset($_SESSION['special_merchant_id']))		$merchant=$_SESSION['special_merchant_id'];
      	
+     	
+     	if($_SESSION['access_level'] == 70 && $merchant==0)
+     	{	//no merchant selected...user should at least have the group selected.
+     		$sql="
+               	select merchant_id,store_id
+                  	from users
+                  	where id='".sql_friendly($_SESSION['user_id'])."'
+               ";
+               $data = simple_query($sql);          
+               if($row = mysqli_fetch_array($data))
+               {
+               	$_SESSION['selected_merchant_id']=$row['merchant_id'];               	
+               	$merchant=$row['merchant_id'];
+               }
+     	}
+     	     	
 		if($user==0 && $merchant ==0 && $store==0)			return $display;
 		
 		$display.="<div class='breadcrumb_trail'>";			
@@ -6916,7 +6955,7 @@
      	$starting=$_SESSION['selected_merchant_id'];
      	
      	if($_SESSION['access_level'] == 70 && $_SESSION['selected_merchant_id']==0)
-     	{	//no merchnat selected...user should at least have the group selected.
+     	{	//no merchant selected...user should at least have the group selected.
      		$sql="
                	select merchant_id,store_id
                   	from users
@@ -6996,15 +7035,19 @@
      	if($_SESSION['merchant_id'] == 0 && $_SESSION['selected_merchant_id'] > 0)
      	{
      		$mrr_adder.=" and (attached_files.merchant_id='".sql_friendly($_SESSION['selected_merchant_id'])."'";
-     		if($_SESSION['access_level'] >=70)
+     		if($_SESSION['access_level'] >=50)
      		{
-     			//$mrr_adder.=" or (merchants.parent_company_id='".sql_friendly($_SESSION['selected_merchant_id'])."' and merchants.parent_company_id>0)";	
+     			$mrr_adder.=" or (merchants.parent_company_id='".sql_friendly($_SESSION['selected_merchant_id'])."' and merchants.parent_company_id>0)";	
      		}     
      		$mrr_adder.=")";		
      	}
      	elseif($_SESSION['merchant_id'] > 0)
      	{
      		$mrr_adder.=" and attached_files.merchant_id='".sql_friendly($_SESSION['merchant_id'])."'";
+     	}
+     	elseif($_SESSION['merchant_id'] == 0 && $_SESSION['selected_merchant_id']==0)
+     	{
+     		$mrr_adder.=" and attached_files.merchant_id=0";
      	}
      	
      	//find store template next...override merchant if set.
@@ -7036,10 +7079,12 @@
 		$sql="
           	select attached_files.*
              	from attached_files
+             		left join merchants on merchants.id=attached_files.merchant_id
              		
              	where attached_files.deleted=0
              		and attached_files.auditor2_viewable > 0               		 
              		".$mrr_adder."
+             		and attached_files.merchant_id>0
              		and attached_files.linedate_display_start <= NOW()
              	order by attached_files.public_name asc,attached_files.id asc
           ";		//left join merchants on merchants.id=attached_files.merchant_id and merchants.deleted=0
