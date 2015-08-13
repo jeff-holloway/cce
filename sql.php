@@ -4,6 +4,7 @@ include('header.php');
 include('includes/PDFInfo.php');
 
 // test update
+// test update 2
 
 $imagick = new Imagick();
 $imagick->setResolution(300,300);
