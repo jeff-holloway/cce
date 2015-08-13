@@ -146,7 +146,8 @@
 			}
 			else
 			{
-				$_SESSION['selected_user_id']=$row['id'];	
+				//$_SESSION['selected_user_id']=$row['id'];	
+				$_SESSION['selected_user_id']=0;
 				$_SESSION['selected_merchant_id']=$_SESSION['merchant_id'];
 				$_SESSION['selected_store_id']=$_SESSION['store_id'];
 			}
